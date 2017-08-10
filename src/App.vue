@@ -1,34 +1,26 @@
 <template lang="pug">
   #app
-    img(src="./assets/logo.png")
-    h1 {{msg}}
-    h2 Essential Links
-    ul
-      li
-        a(href="https://vuejs.org", target="_blank") Core Docs
-      li
-        a(href="https://forum.vuejs.org", target="_blank") Forum
-      li
-        a(href="https://gitter.im/vuejs/vue", target="_blank") Gitter Chat
-      li
-        a(href="https://twitter.com/vuejs", target="_blank") Twitter
-    h2 Ecosystem
-    ul
-      li
-        a(href="http://router.vuejs.org/", target="_blank") vue-router
-      li
-        a(href="http://vuex.vuejs.org/", target="_blank") vuex
-      li
-        a(href="http://vue-loader.vuejs.org/", target="_blank") vue-loader
-      li
-        a(href="https://github.com/vuejs/awesome-vue", target="_blank") awesome-vue
+    h1 Auto Playlist
+    h2 Tracks
+    ul(v-for="t in tracks")
+      li {{t}}
 </template>
 
 <script lang="coffee">
 export default
   name: 'app'
   data: ->
-    msg: 'Welcome to Your Vue.js App'
+    tracks: []
+  mounted: ->
+    console.log 'ready!'
+    @load()
+    @poll = setInterval =>
+      @load()
+    , 2000
+  methods:
+    load: ->
+      console.log 'load!'
+      @tracks.unshift(new Date())
 </script>
 
 <style lang="stylus">
