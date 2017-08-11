@@ -4,6 +4,7 @@
   h2.error(v-if="error") Error: {{error}}
   div(v-if="authorized")
     h3 {{authorized}}
+    Playlists
     h2 Tracks
     ul(v-for="t in tracks")
       li {{t}}
@@ -22,6 +23,7 @@ Vue.use VueLS
 
 import Url from 'url'
 import Querystring from 'querystring'
+import Playlists from './Playlists.vue'
 
 { log } = console
 
@@ -79,6 +81,10 @@ export default
 
     poll: ->
       @tracks.unshift(new Date())
+
+  components: {
+    Playlists,
+  }
 
 </script>
 
