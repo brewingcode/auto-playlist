@@ -43,9 +43,7 @@ export default
         @error = "Spotify authorization error: #{me.query.error}"
 
     @spotify 'me', (resp) =>
-      @authorized = 'foo'
-      resp.json().then (obj) =>
-        @authorized = "Hello, #{obj.id}"
+      @authorized = "Hello, #{resp.id}"
       @pollTimer = setInterval =>
         @poll()
       , 2000
@@ -55,7 +53,9 @@ export default
       @$http.get "https://api.spotify.com/v1/#{path}",
         headers:
           'Authorization': "Bearer #{@$localStorage.get 'access_token'}"
-      .then cb, (err) ->
+      .then (response) =>
+        response.json().then cb
+      , (err) ->
         @error = "Spotify API: #{err.statusText}"
 
     auth: ->
