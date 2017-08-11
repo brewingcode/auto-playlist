@@ -2,12 +2,14 @@
 #app
   h1 Auto Playlist
   h2.error(v-if="error") Error: {{error}}
-  h2 Tracks
-  h3
-    span(v-if="authorized") {{authorized}}
-    button(v-else, @click="auth") Authorize
-  ul(v-for="t in tracks")
-    li {{t}}
+  div(v-if="authorized")
+    h3 {{authorized}}
+    h2 Tracks
+    ul(v-for="t in tracks")
+      li {{t}}
+  div(v-else)
+    h3
+      button(@click="auth") Authorize
 </template>
 
 <script lang="coffee">
@@ -22,6 +24,9 @@ import Url from 'url'
 import Querystring from 'querystring'
 
 { log } = console
+
+self = ->
+  window.location.protocol + '//' + window.location.host + '/'
 
 export default
   name: 'app'
@@ -38,15 +43,17 @@ export default
       params = Querystring.parse me.hash.replace /^#/, ''
       if params.state is @$localStorage.get('csrf')
         @$localStorage.set 'access_token', params.access_token
+      window.location.href = self()
     else if me.query
       if me.query.state is @$localStorage.get('csrf')
         @error = "Spotify authorization error: #{me.query.error}"
 
-    @spotify 'me', (resp) =>
-      @authorized = "Hello, #{resp.id}"
-      @pollTimer = setInterval =>
-        @poll()
-      , 2000
+    if @$localStorage.get 'access_token'
+      @spotify 'me', (resp) =>
+        @authorized = "Hello, #{resp.id}"
+        @pollTimer = setInterval =>
+          @poll()
+        , 2000
 
   methods:
     spotify: (path, cb) ->
@@ -65,7 +72,7 @@ export default
       url.query =
         client_id: 'b07feecc7b624316b5742a3b2593f0e5'
         response_type: 'token'
-        redirect_uri: window.location.href
+        redirect_uri: self()
         state: @$localStorage.get 'csrf'
 
       window.location.href = url.format()
