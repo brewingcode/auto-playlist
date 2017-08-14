@@ -58,7 +58,7 @@ export default
         @authorized = "Hello, #{resp.id}"
         @pollTimer = setInterval =>
           @poll()
-        , 2000
+        , 5000
 
   methods:
     auth: ->
