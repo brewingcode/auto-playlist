@@ -70,6 +70,12 @@ export default
         response_type: 'token'
         redirect_uri: self()
         state: @$localStorage.get 'csrf'
+        scope: [
+          'playlist-modify-public'
+          'playlist-modify-private'
+          'playlist-read-private'
+          'playlist-read-collaborative'
+        ].join ' '
 
       window.location.href = url.format()
 
@@ -82,7 +88,6 @@ export default
 
   components: { Playlists }
   mixins: [ Spotify ]
-
 </script>
 
 <style lang="stylus">

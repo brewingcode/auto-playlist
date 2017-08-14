@@ -6,6 +6,7 @@
 
 <script lang="coffee">
 import vSelect from 'vue-select'
+import Spotify from './spotify.coffee'
 
 export default
   name: 'x'
@@ -13,15 +14,13 @@ export default
     playlists: []
 
   mounted: ->
-    @playlists = [
-      { value: 'foo', label: 'This is foo' }
-      { value: 'bar', label: 'This is bar' }
-      { value: 'neo', label: 'This is the one' }
-    ]
+    @spotify 'me/playlists', (resp) =>
+      @playlists = resp.items?.map (item) ->
+        value: item.id
+        label: item.name
 
-  components: {
-    vSelect,
-  }
+  components: { vSelect }
+  mixins: [ Spotify ]
 </script>
 
 <style lang="stylus" scoped>
