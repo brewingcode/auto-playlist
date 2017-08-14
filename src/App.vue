@@ -4,6 +4,8 @@
   h2.error(v-if="error") Error: {{error}}
   div(v-if="authorized")
     h3 {{authorized}}
+    div
+      button(@click="signOut") Sign Out
     Playlists
     h2 Tracks
     ul(v-for="t in tracks")
@@ -70,6 +72,10 @@ export default
         state: @$localStorage.get 'csrf'
 
       window.location.href = url.format()
+
+    signOut: ->
+      @$localStorage.remove 'access_token'
+      window.location.reload()
 
     poll: ->
       @tracks.unshift(new Date())
