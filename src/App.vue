@@ -9,7 +9,9 @@
     Playlists
     h2 Tracks
     div(v-for="t in tracks")
-      div {{t}}
+      div {{t.name}}
+        span(v-if="t.saved")  saved!
+        span(v-else)  not saved
   div(v-else)
     h3
       button(@click="auth") Authorize
@@ -75,6 +77,8 @@ export default
           'playlist-modify-private'
           'playlist-read-private'
           'playlist-read-collaborative'
+          'user-read-currently-playing'
+          'user-read-playback-state'
         ].join ' '
 
       window.location.href = url.format()
@@ -84,7 +88,19 @@ export default
       window.location.reload()
 
     poll: ->
-      @tracks.unshift(new Date())
+      @spotify 'me/player/currently-playing', (resp) =>
+        track = @tracks.find (t) -> t.id is resp.item?.id
+        if not track
+          @tracks.unshift resp.item
+          track = @tracks[0]
+
+        track.progress_ms = resp.progress_ms
+        progress = track.progress_ms / track.duration_ms
+        log "#{track.name}: #{progress}"
+        if track.progress_ms / track.duration_ms > 0.90 and not track.saved
+          track.saved = true
+          log "would save this track: #{track.name}"
+          # save track
 
   components: { Playlists }
   mixins: [ Spotify ]
