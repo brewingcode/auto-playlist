@@ -8,8 +8,8 @@
       button(@click="signOut") Sign Out
     Playlists
     h2 Tracks
-    ul(v-for="t in tracks")
-      li {{t}}
+    div(v-for="t in tracks")
+      div {{t}}
   div(v-else)
     h3
       button(@click="auth") Authorize
@@ -96,14 +96,6 @@ export default
 
 h1, h2
   font-weight: normal
-
-ul
-  list-style-type: none
-  padding: 0
-
-li
-  display: inline-block
-  margin: 0 10px
 
 a
   color: #42b983
