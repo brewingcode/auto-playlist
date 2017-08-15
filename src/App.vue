@@ -9,7 +9,7 @@
     Playlists
     h2 Tracks
     div(v-for="t in tracks")
-      div {{t.name}}
+      .track {{t.name}}
         span(v-if="t.saved")  saved!
         span(v-else)  not saved
   div(v-else)
@@ -91,13 +91,15 @@ export default
       @spotify 'me/player/currently-playing', (resp) =>
         track = @tracks.find (t) -> t.id is resp.item?.id
         if not track
+          resp.item.progress_ms = 0
+          resp.item.saved = false
           @tracks.unshift resp.item
           track = @tracks[0]
 
         track.progress_ms = resp.progress_ms
         progress = track.progress_ms / track.duration_ms
         log "#{track.name}: #{progress}"
-        if track.progress_ms / track.duration_ms > 0.90 and not track.saved
+        if progress > 0.90 and not track.saved
           track.saved = true
           log "would save this track: #{track.name}"
           # save track
