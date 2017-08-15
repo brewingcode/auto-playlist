@@ -25,9 +25,6 @@ import Spotify from './spotify.coffee'
 
 { log } = console
 
-self = ->
-  window.location.protocol + '//' + window.location.host + '/'
-
 export default
   name: 'app'
 
@@ -43,7 +40,7 @@ export default
       params = Querystring.parse me.hash.replace /^#/, ''
       if params.state is @$localStorage.get('csrf')
         @$localStorage.set 'access_token', params.access_token
-      window.location.href = self()
+      window.location.href = @self()
     else if me.query
       if me.query.state is @$localStorage.get('csrf')
         @error = "Spotify authorization error: #{me.query.error}"
@@ -56,30 +53,6 @@ export default
         , 5000
 
   methods:
-    auth: ->
-      @$localStorage.set 'csrf', 'something'
-
-      url = Url.parse 'https://accounts.spotify.com/authorize'
-      url.query =
-        client_id: 'b07feecc7b624316b5742a3b2593f0e5'
-        response_type: 'token'
-        redirect_uri: self()
-        state: @$localStorage.get 'csrf'
-        scope: [
-          'playlist-modify-public'
-          'playlist-modify-private'
-          'playlist-read-private'
-          'playlist-read-collaborative'
-          'user-read-currently-playing'
-          'user-read-playback-state'
-        ].join ' '
-
-      window.location.href = url.format()
-
-    signOut: ->
-      @$localStorage.remove 'access_token'
-      window.location.reload()
-
     poll: ->
       @spotify 'me/player/currently-playing', (resp) =>
         track = @tracks.find (t) -> t.id is resp.item?.id
