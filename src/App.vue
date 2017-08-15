@@ -18,13 +18,6 @@
 </template>
 
 <script lang="coffee">
-import Vue from 'vue'
-import VueResource from 'vue-resource'
-import VueLS from 'vue-localstorage'
-
-Vue.use VueResource
-Vue.use VueLS
-
 import Url from 'url'
 import Querystring from 'querystring'
 import Playlists from './Playlists.vue'
