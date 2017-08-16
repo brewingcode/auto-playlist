@@ -8,13 +8,13 @@
       button(@click="signOut") Sign Out
     Playlists
     h2 Tracks
-    div(v-if="tracks.length && tracks[0].is_playing")
+    div
+      div(v-if="tracks.length && !tracks[0].is_playing")
+        .track (no track currently playing)
       div(v-for="t in tracks")
         .track {{t.item.name}}
           span(v-if="t.saved")  saved!
           span(v-else)  not saved
-    div(v-else)
-      span No track playing
   div(v-else)
     h3
       button(@click="auth") Authorize
