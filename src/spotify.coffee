@@ -1,5 +1,6 @@
 import crypto from 'crypto'
 import Url from 'url'
+import Querystring from 'querystring'
 
 export default
   methods:

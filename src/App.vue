@@ -18,8 +18,6 @@
 </template>
 
 <script lang="coffee">
-import Url from 'url'
-import Querystring from 'querystring'
 import Playlists from './Playlists.vue'
 import Spotify from './spotify.coffee'
 
@@ -31,26 +29,14 @@ export default
   data: ->
     tracks: []
     authorized: ''
-    error: ''
     pollTimer: null
 
   mounted: ->
-    me = Url.parse window.location.href, true
-    if me.hash
-      params = Querystring.parse me.hash.replace /^#/, ''
-      if params.state is @$localStorage.get('csrf')
-        @$localStorage.set 'access_token', params.access_token
-      window.location.href = @self()
-    else if me.query
-      if me.query.state is @$localStorage.get('csrf')
-        @error = "Spotify authorization error: #{me.query.error}"
-
-    if @$localStorage.get 'access_token'
-      @spotify 'me', (resp) =>
-        @authorized = "Hello, #{resp.id}"
-        @pollTimer = setInterval =>
-          @poll()
-        , 5000
+    @checkAuthParams (resp) =>
+      @authorized = "Hello, #{resp.id}"
+      @pollTimer = setInterval =>
+        @poll()
+      , 5000
 
   methods:
     poll: ->
