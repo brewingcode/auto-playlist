@@ -35,9 +35,7 @@ export default
   mounted: ->
     @checkAuthParams (resp) =>
       @authorized = "Hello, #{resp.id}"
-      @pollTimer = setInterval =>
-        @poll()
-      , 5000
+      @pollTimer = setTimeout @poll.bind(this), 0
 
   methods:
     poll: ->
@@ -56,6 +54,8 @@ export default
           track.saved = true
           log "would save this track: #{track.name}"
           # save track
+
+        @pollTimer = setTimeout @poll.bind(this), 5000
 
   components: { Playlists }
   mixins: [ Spotify ]
