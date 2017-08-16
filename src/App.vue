@@ -29,6 +29,7 @@ export default
   data: ->
     tracks: []
     authorized: ''
+    error: ''
     pollTimer: null
 
   mounted: ->
