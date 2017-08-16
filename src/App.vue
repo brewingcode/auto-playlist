@@ -6,7 +6,9 @@
     h3 {{authorized}}
     div
       button(@click="signOut") Sign Out
-    Playlists
+    .playlists
+      h3 Pick one of your playlists
+      v-select(v-model="playlist", :options="playlists")
     h2 Tracks
     div
       div(v-if="tracks.length && !tracks[0].is_playing")
@@ -21,8 +23,8 @@
 </template>
 
 <script lang="coffee">
-import Playlists from './Playlists.vue'
 import Spotify from './spotify.coffee'
+import vSelect from 'vue-select'
 
 { log } = console
 
@@ -30,18 +32,25 @@ export default
   name: 'app'
 
   data: ->
+    playlist: null
+    playlists: []
     tracks: []
     authorized: ''
     error: ''
     pollTimer: null
 
   mounted: ->
-    tracks = JSON.parse(@$localStorage.get 'tracks')
-    if tracks and tracks.length
-      @tracks = tracks
+    try
+      tracks = JSON.parse(@$localStorage.get 'tracks')
+      if tracks and tracks.length
+        @tracks = tracks
     @checkAuthParams (resp) =>
       @authorized = "Hello, #{resp.id}"
       @pollTimer = setTimeout @poll.bind(this), 0
+      @spotify 'me/playlists', (resp) =>
+        @playlists = resp.items?.map (item) ->
+          value: item.id
+          label: item.name
 
   methods:
     poll: ->
@@ -60,13 +69,13 @@ export default
           log "#{track.item.name}: #{progress}"
           if progress > 0.90 and not track.saved
             track.saved = true
-            log "would save this track: #{track.item.name}"
+            log "would save #{track.item.name} to #{@playlist.label}"
             # save track
 
         @$localStorage.set 'tracks', JSON.stringify(@tracks)
         @pollTimer = setTimeout @poll.bind(this), 5000
 
-  components: { Playlists }
+  components: { vSelect }
   mixins: [ Spotify ]
 </script>
 
@@ -78,6 +87,10 @@ export default
   text-align: center
   color: #2c3e50
   margin-top: 60px
+
+.playlists
+  width: 30em
+  display: inline-block
 
 h1, h2
   font-weight: normal
