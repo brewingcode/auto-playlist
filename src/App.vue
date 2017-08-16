@@ -8,10 +8,13 @@
       button(@click="signOut") Sign Out
     Playlists
     h2 Tracks
-    div(v-for="t in tracks")
-      .track {{t.name}}
-        span(v-if="t.saved")  saved!
-        span(v-else)  not saved
+    div(v-if="tracks.length && tracks[0].is_playing")
+      div(v-for="t in tracks")
+        .track {{t.item.name}}
+          span(v-if="t.saved")  saved!
+          span(v-else)  not saved
+    div(v-else)
+      span No track playing
   div(v-else)
     h3
       button(@click="auth") Authorize
@@ -40,20 +43,22 @@ export default
   methods:
     poll: ->
       @spotify 'me/player/currently-playing', (resp) =>
-        track = @tracks.find (t) -> t.id is resp.item?.id
+        track = @tracks.find (t) -> t.item.id is resp.item?.id
         if not track
-          resp.item.progress_ms = 0
-          resp.item.saved = false
-          @tracks.unshift resp.item
-          track = @tracks[0]
+          track = resp
+          track.saved = false
+          @tracks.unshift track
 
-        track.progress_ms = resp.progress_ms
-        progress = track.progress_ms / track.duration_ms
-        log "#{track.name}: #{progress}"
-        if progress > 0.90 and not track.saved
-          track.saved = true
-          log "would save this track: #{track.name}"
-          # save track
+        for k in ['is_playing', 'progress_ms']
+          track[k] = resp[k]
+
+        if track.is_playing
+          progress = track.progress_ms / track.item.duration_ms
+          log "#{track.item.name}: #{progress}"
+          if progress > 0.90 and not track.saved
+            track.saved = true
+            log "would save this track: #{track.item.name}"
+            # save track
 
         @pollTimer = setTimeout @poll.bind(this), 5000
 
