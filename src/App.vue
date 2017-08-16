@@ -36,6 +36,9 @@ export default
     pollTimer: null
 
   mounted: ->
+    tracks = JSON.parse(@$localStorage.get 'tracks')
+    if tracks and tracks.length
+      @tracks = tracks
     @checkAuthParams (resp) =>
       @authorized = "Hello, #{resp.id}"
       @pollTimer = setTimeout @poll.bind(this), 0
@@ -60,6 +63,7 @@ export default
             log "would save this track: #{track.item.name}"
             # save track
 
+        @$localStorage.set 'tracks', JSON.stringify(@tracks)
         @pollTimer = setTimeout @poll.bind(this), 5000
 
   components: { Playlists }
