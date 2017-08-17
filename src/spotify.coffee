@@ -1,6 +1,7 @@
 import crypto from 'crypto'
 import Url from 'url'
 import Querystring from 'querystring'
+import pr from 'bluebird'
 
 export default
   methods:
@@ -21,7 +22,7 @@ export default
         @$localStorage.remove('csrf')
 
       if @$localStorage.get 'access_token'
-        @spotify 'me', cb
+        @spotify 'me', null, cb
 
     auth: ->
       @$localStorage.set 'csrf', crypto.randomBytes(12).toString('hex')
@@ -47,13 +48,19 @@ export default
       @$localStorage.remove 'access_token'
       window.location.reload()
 
-    spotify: (path, cb) ->
-      @$http.get "https://api.spotify.com/v1/#{path}",
-        headers:
-          'Authorization': "Bearer #{@$localStorage.get 'access_token'}"
+    spotify: (path, postData, cb) ->
+      new pr (resolve) =>
+        if postData
+          resolve @$http.post "https://api.spotify.com/v1/#{path}", postData,
+            headers:
+              'Authorization': "Bearer #{@$localStorage.get 'access_token'}"
+        else
+          resolve @$http.get "https://api.spotify.com/v1/#{path}",
+            headers:
+              'Authorization': "Bearer #{@$localStorage.get 'access_token'}"
       .then (response) ->
         response.json().then cb
-      , (err) ->
+      , (err) =>
         console.error 'api error:', err
         if err.status is 401 and @$localStorage.get 'access_token'
           # our auth probably expired

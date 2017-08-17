@@ -47,14 +47,14 @@ export default
     @checkAuthParams (resp) =>
       @authorized = resp
       @pollTimer = setTimeout @poll.bind(this), 0
-      @spotify 'me/playlists', (resp) =>
+      @spotify 'me/playlists', null, (resp) =>
         @playlists = resp.items?.map (item) ->
           value: item.id
           label: item.name
 
   methods:
     poll: ->
-      @spotify 'me/player/currently-playing', (resp) =>
+      @spotify 'me/player/currently-playing', null, (resp) =>
         track = @tracks.find (t) -> t.item.id is resp.item?.id
         if not track
           track = resp
