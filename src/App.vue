@@ -64,14 +64,12 @@ export default
 
     poll: ->
       @spotify 'me/player/currently-playing', null, (resp) =>
-        track = @tracks.find (t) -> t.item.id is resp.item?.id
-        if not track
-          track = resp
-          track.saved = false
-          @tracks.unshift track
+        if @tracks?[0]?.item.id isnt resp.item.id
+          resp.saved = false
+          @tracks.unshift resp
 
-        for k in ['is_playing', 'progress_ms']
-          track[k] = resp[k]
+        track = @tracks[0]
+        track[k] = resp[k] for k in ['is_playing', 'progress_ms']
 
         if track.is_playing
           progress = track.progress_ms / track.item.duration_ms
