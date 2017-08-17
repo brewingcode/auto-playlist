@@ -3,7 +3,7 @@
   h1 Auto Playlist
   h2.error(v-if="error") Error: {{error}}
   div(v-if="authorized")
-    h3 {{authorized}}
+    h3 Hello, {{authorized.id}}
     div
       button(@click="signOut") Sign Out
     .playlists
@@ -35,8 +35,8 @@ export default
     playlist: null
     playlists: []
     tracks: []
-    authorized: ''
-    error: ''
+    authorized: null
+    error: null
     pollTimer: null
 
   mounted: ->
@@ -45,7 +45,7 @@ export default
       if tracks and tracks.length
         @tracks = tracks
     @checkAuthParams (resp) =>
-      @authorized = "Hello, #{resp.id}"
+      @authorized = resp
       @pollTimer = setTimeout @poll.bind(this), 0
       @spotify 'me/playlists', (resp) =>
         @playlists = resp.items?.map (item) ->
