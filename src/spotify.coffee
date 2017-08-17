@@ -13,10 +13,12 @@ export default
         params = Querystring.parse me.hash.replace /^#/, ''
         if params.state is @$localStorage.get('csrf')
           @$localStorage.set 'access_token', params.access_token
+        @$localStorage.remove('csrf')
         window.location.href = @self()
       else if me.query
         if me.query.state is @$localStorage.get('csrf')
           @error = "Spotify authorization error: #{me.query.error}"
+        @$localStorage.remove('csrf')
 
       if @$localStorage.get 'access_token'
         @spotify 'me', cb
@@ -55,6 +57,7 @@ export default
         console.error 'api error:', err
         if err.status is 401 and @$localStorage.get 'access_token'
           # our auth probably expired
+          @$localStorage.remove 'access_token'
           @auth()
           # auth() will redirect (ie, return) us out of here
         @error = "Spotify API: #{err.statusText}"
