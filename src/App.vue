@@ -53,6 +53,15 @@ export default
           label: item.name
 
   methods:
+    save: (track) ->
+      if @authorized?.id and @playlist?.value
+        log "saving #{track.item.name} to #{@playlist.label}"
+        @spotify "users/#{@authorized.id}/playlists/#{@playlist.value}/tracks",
+          uris: [track.item.uri]
+        , (resp) ->
+          console.log 'playlist saved:', resp
+          track.saved = true
+
     poll: ->
       @spotify 'me/player/currently-playing', null, (resp) =>
         track = @tracks.find (t) -> t.item.id is resp.item?.id
@@ -68,9 +77,7 @@ export default
           progress = track.progress_ms / track.item.duration_ms
           log "#{track.item.name}: #{progress}"
           if progress > 0.90 and not track.saved
-            track.saved = true
-            log "would save #{track.item.name} to #{@playlist.label}"
-            # save track
+            @save track
 
         @$localStorage.set 'tracks', JSON.stringify(@tracks)
         @pollTimer = setTimeout @poll.bind(this), 5000
