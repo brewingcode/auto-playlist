@@ -9,22 +9,24 @@
     .playlists
       h3 Pick one of your playlists
       v-select(v-model="playlist", :options="playlists")
-    h2 Tracks
-    div
-      div(v-if="tracks.length && !tracks[0].is_playing")
-        .track (no track currently playing)
-      div(v-for="t in tracks")
-        .track {{t.item.name}}
-          span(v-if="t.saved")  saved!
-          span(v-else)  not saved
+    div(v-if="playlist")
+      h2 Currently playing:
+      div
+        div(v-if="current && current.is_playing")
+          SpotifyTrack.current(:t="current")
+        div(v-else) (nothing)
+      div(v-if="history.length")
+        h2 Previously played:
+        div(v-for="t in history")
+          SpotifyTrack(:t="t")
   div(v-else)
-    h3
-      button(@click="auth") Authorize
+    button(@click="auth") Authorize
 </template>
 
 <script lang="coffee">
 import Spotify from './spotify.coffee'
 import vSelect from 'vue-select'
+import SpotifyTrack from './Track.vue' # "track" is a reserved html5 tag name
 
 { log } = console
 
@@ -34,53 +36,65 @@ export default
   data: ->
     playlist: null
     playlists: []
-    tracks: []
+    current: null
+    history: []
     authorized: null
     error: null
-    pollTimer: null
 
   mounted: ->
-    try
-      tracks = JSON.parse(@$localStorage.get 'tracks')
-      if tracks and tracks.length
-        @tracks = tracks
+    @fromStore()
     @checkAuthParams (resp) =>
       @authorized = resp
-      @pollTimer = setTimeout @poll.bind(this), 0
+      setTimeout @poll.bind(this), 0
       @spotify 'me/playlists', null, (resp) =>
         @playlists = resp.items?.map (item) ->
           value: item.id
           label: item.name
 
   methods:
-    save: (track) ->
-      if @authorized?.id and @playlist?.value
-        log "saving #{track.item.name} to #{@playlist.label}"
+    toStore: ->
+      for k in ['current', 'playlist', 'history']
+        if this[k]
+          try
+            @$localStorage.set k, JSON.stringify this[k]
+
+    fromStore: ->
+      for k in ['current', 'playlist', 'history']
+        if v = @$localStorage.get k
+          try
+            this[k] = JSON.parse v
+
+    save: ->
+      if @current.is_playing and (not @current.saved) and @playlist
+        log "saving #{@current.item.name} to #{@playlist.label}"
+        @current.saved = true
         @spotify "users/#{@authorized.id}/playlists/#{@playlist.value}/tracks",
-          uris: [track.item.uri]
-        , (resp) ->
+          uris: [@current.item.uri]
+        , (resp) =>
           console.log 'playlist saved:', resp
-          track.saved = true
+          @toStore
 
     poll: ->
       @spotify 'me/player/currently-playing', null, (resp) =>
-        if @tracks?[0]?.item.id isnt resp.item.id
+        if @current and @current.item.id isnt resp.item.id
+          @history.unshift @current
           resp.saved = false
-          @tracks.unshift resp
+          @current = resp
 
-        track = @tracks[0]
-        track[k] = resp[k] for k in ['is_playing', 'progress_ms']
+        unless @current
+          resp.saved = false
+          @current = resp
 
-        if track.is_playing
-          progress = track.progress_ms / track.item.duration_ms
-          log "#{track.item.name}: #{progress}"
-          if progress > 0.90 and not track.saved
-            @save track
+        @current[k] = resp[k] for k in ['is_playing', 'progress_ms']
+        progress = @current.progress_ms / @current.item.duration_ms
+        log "#{@current.item.name}: #{progress}"
+        if progress > 0.90
+          @save()
 
-        @$localStorage.set 'tracks', JSON.stringify(@tracks)
-        @pollTimer = setTimeout @poll.bind(this), 5000
+        @toStore()
+        setTimeout @poll.bind(this), 5000
 
-  components: { vSelect }
+  components: { vSelect, SpotifyTrack }
   mixins: [ Spotify ]
 </script>
 
@@ -91,15 +105,11 @@ export default
   -moz-osx-font-smoothing: grayscale
   text-align: center
   color: #2c3e50
-  margin-top: 60px
+  margin-top: 30px
 
+.current
+  font-size: 130%
 .playlists
   width: 30em
   display: inline-block
-
-h1, h2
-  font-weight: normal
-
-a
-  color: #42b983
 </style>
