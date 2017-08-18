@@ -8,7 +8,7 @@
       button(@click="signOut") Sign Out
     .playlists
       h3 Pick one of your playlists
-      v-select(v-model="playlist", :options="playlists")
+      v-select(v-model="playlist", :options="playlists", :on-change="playlistChange")
     div(v-if="playlist")
       h2 Currently playing:
       div
@@ -54,7 +54,7 @@ export default
 
   methods:
     toStore: ->
-      for k in ['current', 'playlist', 'history']
+      for k in ['current', 'history']
         if this[k]
           try
             @$localStorage.set k, JSON.stringify this[k]
@@ -64,6 +64,10 @@ export default
         if v = @$localStorage.get k
           try
             this[k] = JSON.parse v
+
+    playlistChange: (val) ->
+      @$localStorage.set 'playlist', if val then JSON.stringify(val) else null
+      @playlist = val
 
     save: ->
       if @current.is_playing and (not @current.saved) and @playlist
