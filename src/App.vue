@@ -9,14 +9,16 @@
     .playlists
       h3 Pick one of your playlists
       v-select(v-model="playlist", :options="playlists")
-    h2 Tracks
-    div
-      div(v-if="tracks.length && !tracks[0].is_playing")
-        .track (no track currently playing)
-      div(v-for="t in tracks")
-        .track {{t.item.name}}
-          span(v-if="t.saved")  saved!
-          span(v-else)  not saved
+    div(v-if="playlist")
+      h2 Currently playing:
+      div
+        div(v-if="current && current.is_playing")
+          SpotifyTrack(:t="current")
+        div(v-else) (nothing)
+      div(v-if="history.length")
+        h2 Previously played:
+        div(v-for="t in history")
+          SpotifyTrack(:t="t")
   div(v-else)
     h3
       button(@click="auth") Authorize
@@ -25,6 +27,7 @@
 <script lang="coffee">
 import Spotify from './spotify.coffee'
 import vSelect from 'vue-select'
+import SpotifyTrack from './Track.vue' # "track" is a reserved html5 tag name
 
 { log } = console
 
@@ -89,7 +92,7 @@ export default
         @toStore()
         setTimeout @poll.bind(this), 5000
 
-  components: { vSelect }
+  components: { vSelect, SpotifyTrack }
   mixins: [ Spotify ]
 </script>
 
