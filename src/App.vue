@@ -32,8 +32,6 @@ import vSelect from 'vue-select'
 import SpotifyTrack from './Track.vue' # "track" is a reserved html5 tag name
 
 export default
-  name: 'app'
-
   data: ->
     playlist: null
     playlists: []
