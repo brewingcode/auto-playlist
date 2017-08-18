@@ -53,9 +53,6 @@ export default
           label: item.name
 
   methods:
-    save: (track) ->
-      if @authorized?.id and @playlist?.value
-        log "saving #{track.item.name} to #{@playlist.label}"
     toStore: ->
       for k in ['current', 'playlist', 'history']
         if this[k]
@@ -68,26 +65,31 @@ export default
           try
             this[k] = JSON.parse v
 
+    save: ->
+      if @current.is_playing and (not @current.saved) and @playlist
+        log "saving #{@current.item.name} to #{@playlist.label}"
         @spotify "users/#{@authorized.id}/playlists/#{@playlist.value}/tracks",
-          uris: [track.item.uri]
-        , (resp) ->
+          uris: [@current.item.uri]
+        , (resp) =>
           console.log 'playlist saved:', resp
-          track.saved = true
+          @current.saved = true
 
     poll: ->
       @spotify 'me/player/currently-playing', null, (resp) =>
-        if @tracks?[0]?.item.id isnt resp.item.id
+        if @current and @current.item.id isnt resp.item.id
+          @history.unshift @current
           resp.saved = false
-          @tracks.unshift resp
+          @current = resp
 
-        track = @tracks[0]
-        track[k] = resp[k] for k in ['is_playing', 'progress_ms']
+        unless @current
+          resp.saved = false
+          @current = resp
 
-        if track.is_playing
-          progress = track.progress_ms / track.item.duration_ms
-          log "#{track.item.name}: #{progress}"
-          if progress > 0.90 and not track.saved
-            @save track
+        @current[k] = resp[k] for k in ['is_playing', 'progress_ms']
+        progress = @current.progress_ms / @current.item.duration_ms
+        log "#{@current.item.name}: #{progress}"
+        if progress > 0.90
+          @save()
 
         @toStore()
         setTimeout @poll.bind(this), 5000
