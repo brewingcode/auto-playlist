@@ -1,5 +1,5 @@
 <template lang="pug">
-#app
+#app.container-fluid.col-lg-6.col-md-9.col-sm-9.col-xs-12
   h1 Auto Playlist
   h2.error(v-if="error") Error: {{error}}
   div(v-if="authorized")
@@ -107,7 +107,8 @@ export default
   -moz-osx-font-smoothing: grayscale
   text-align: center
   color: #2c3e50
-  margin-top: 30px
+  margin: 0 auto;
+  float: none;
 
 .current
   font-size: 130%
