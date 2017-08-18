@@ -1,9 +1,17 @@
 <template lang="pug">
 .track
   div
-    span {{t.item.name}}
-    span(v-if="t.saved")  saved to playlist!
-    span(v-else)  unsaved...
+    a.title(target="_blank", :href="t.item.external_urls.spotify") {{t.item.name}}
+    span
+      |
+      | by
+      |
+    a.artist(target="_blank", :href="t.item.artists[0].external_urls.spotify") {{t.item.artists[0].name}}
+    span
+      |
+      | on
+      |
+    a.album(target="_blank", :href="t.item.album.external_urls.spotify") {{t.item.album.name}}
   div(v-if="t.is_playing")
     progress(:value="t.progress")
 </template>
