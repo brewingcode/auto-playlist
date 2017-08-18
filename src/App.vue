@@ -19,6 +19,9 @@
         h2 Previously played:
         div(v-for="t in history")
           SpotifyTrack(:t="t")
+    .usage(v-else).
+      Once you choose a playlist, any track that you listen to more than 90%
+      of will automatically be added to the end of your selected playlist.
   div(v-else)
     button(@click="auth") Authorize
 </template>
@@ -109,4 +112,6 @@ export default
 .playlists
   width: 30em
   display: inline-block
+.usage
+  margin-top: 20px
 </style>
