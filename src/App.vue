@@ -80,6 +80,7 @@ export default
       @spotify 'me/player/currently-playing', null, (resp) =>
         if @current and @current.item.id isnt resp.item.id
           @history.unshift @current
+          @current.is_playing = false
           resp.saved = false
           @current = resp
 
@@ -88,9 +89,8 @@ export default
           @current = resp
 
         @current[k] = resp[k] for k in ['is_playing', 'progress_ms']
-        progress = @current.progress_ms / @current.item.duration_ms
-        log "#{@current.item.name}: #{progress}"
-        if progress > 0.90
+        @current.progress = @current.progress_ms / @current.item.duration_ms
+        if @current.progress > 0.90
           @save()
 
         @toStore()
