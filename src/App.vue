@@ -68,11 +68,12 @@ export default
     save: ->
       if @current.is_playing and (not @current.saved) and @playlist
         log "saving #{@current.item.name} to #{@playlist.label}"
+        @current.saved = true
         @spotify "users/#{@authorized.id}/playlists/#{@playlist.value}/tracks",
           uris: [@current.item.uri]
         , (resp) =>
           console.log 'playlist saved:', resp
-          @current.saved = true
+          @toStore
 
     poll: ->
       @spotify 'me/player/currently-playing', null, (resp) =>
