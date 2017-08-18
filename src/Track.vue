@@ -20,3 +20,10 @@
 export default
   props: [ 't' ]
 </script>
+
+<style lang="stylus" scoped>
+.track
+  display: inline-block
+  padding: 0 1em
+  margin-bottom: 5px
+</style>
