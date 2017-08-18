@@ -28,8 +28,6 @@ import Spotify from './spotify.coffee'
 import vSelect from 'vue-select'
 import SpotifyTrack from './Track.vue' # "track" is a reserved html5 tag name
 
-{ log } = console
-
 export default
   name: 'app'
 
@@ -66,12 +64,10 @@ export default
 
     save: ->
       if @current.is_playing and (not @current.saved) and @playlist
-        log "saving #{@current.item.name} to #{@playlist.label}"
         @current.saved = true
         @spotify "users/#{@authorized.id}/playlists/#{@playlist.value}/tracks",
           uris: [@current.item.uri]
         , (resp) =>
-          console.log 'playlist saved:', resp
           @toStore
 
     poll: ->
