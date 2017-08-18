@@ -1,9 +1,9 @@
 <template lang="pug">
 #app.container-fluid.col-lg-6.col-md-9.col-sm-9.col-xs-12
   h1 Auto Playlist
-  h2.error(v-if="error") Error: {{error}}
+  h3.error(v-if="error") Error: {{error}}
   div(v-if="authorized")
-    h3 Hello, {{authorized.id}}
+    h4 Hello, {{authorized.id}}
     div
       button(@click="signOut") Sign Out
     .playlists
@@ -16,7 +16,7 @@
           SpotifyTrack.current(:t="current")
         div(v-else) (nothing)
       div(v-if="history.length")
-        h2 Previously played:
+        h3 Previously played:
         div(v-for="t in history")
           SpotifyTrack(:t="t")
     .usage(v-else).
