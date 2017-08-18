@@ -45,8 +45,8 @@ export default
     @fromStore()
     @checkAuthParams (resp) =>
       @authorized = resp
-      setTimeout @poll.bind(this), 0
       @spotify 'me/playlists', null, (resp) =>
+        setTimeout @poll.bind(this), 0
         @playlists = resp.items?.map (item) ->
           value: item.id
           label: item.name

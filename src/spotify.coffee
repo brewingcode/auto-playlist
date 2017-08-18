@@ -1,7 +1,6 @@
 import crypto from 'crypto'
 import Url from 'url'
 import Querystring from 'querystring'
-import pr from 'bluebird'
 
 export default
   methods:
@@ -49,22 +48,26 @@ export default
       window.location.reload()
 
     spotify: (path, postData, cb) ->
-      new pr (resolve) =>
+      req = =>
         if postData
-          resolve @$http.post "https://api.spotify.com/v1/#{path}", postData,
+          @$http.post "https://api.spotify.com/v1/#{path}", postData,
             headers:
               'Authorization': "Bearer #{@$localStorage.get 'access_token'}"
         else
-          resolve @$http.get "https://api.spotify.com/v1/#{path}",
+          @$http.get "https://api.spotify.com/v1/#{path}",
             headers:
               'Authorization': "Bearer #{@$localStorage.get 'access_token'}"
-      .then (response) ->
+      req().then (response) ->
         response.json().then cb
       , (err) =>
-        console.error 'api error:', err
         if err.status is 401 and @$localStorage.get 'access_token'
           # our auth probably expired
           @$localStorage.remove 'access_token'
           @auth()
           # auth() will redirect (ie, return) us out of here
-        @error = "Spotify API: #{err.statusText}"
+
+        if err.status isnt 0
+          # only log error if status is NOT 0, because 0 indicates some weird
+          # not-quite-errork
+          console.error 'api error:', JSON.stringify(err)
+          @error = "Spotify API: #{err.statusText}"
