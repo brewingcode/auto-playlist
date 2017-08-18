@@ -8,6 +8,7 @@
     "dev": "node build/dev-server.js",
     "start": "node build/dev-server.js",
     "build": "node build/build.js",
+    "build-prod": "NODE_ENV=production node build/build.js",
     "clean": "rm -rf node_modules dist"
   },
   "dependencies": {
@@ -26,6 +27,7 @@
     "chalk": "^2.0.1",
     "coffee-loader": "^0.7.3",
     "coffee-script": "^1.12.7",
+    "compression-webpack-plugin": "^1.0.0",
     "connect-history-api-fallback": "^1.3.0",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.28.0",
