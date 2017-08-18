@@ -13,15 +13,14 @@
       h2 Currently playing:
       div
         div(v-if="current && current.is_playing")
-          SpotifyTrack(:t="current")
+          SpotifyTrack.current(:t="current")
         div(v-else) (nothing)
       div(v-if="history.length")
         h2 Previously played:
         div(v-for="t in history")
           SpotifyTrack(:t="t")
   div(v-else)
-    h3
-      button(@click="auth") Authorize
+    button(@click="auth") Authorize
 </template>
 
 <script lang="coffee">
@@ -106,15 +105,11 @@ export default
   -moz-osx-font-smoothing: grayscale
   text-align: center
   color: #2c3e50
-  margin-top: 60px
+  margin-top: 30px
 
+.current
+  font-size: 130%
 .playlists
   width: 30em
   display: inline-block
-
-h1, h2
-  font-weight: normal
-
-a
-  color: #42b983
 </style>

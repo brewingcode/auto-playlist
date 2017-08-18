@@ -9,6 +9,3 @@
 export default
   props: ['t']
 </script>
-
-<style lang="stylus">
-</style>
