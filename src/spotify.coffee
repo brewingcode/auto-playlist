@@ -5,7 +5,7 @@ import Querystring from 'querystring'
 export default
   methods:
     self: ->
-      window.location.protocol + '//' + window.location.host + '/'
+      window.location.protocol + '//' + window.location.host + window.location.pathname
 
     checkAuthParams: (cb) ->
       me = Url.parse window.location.href, true
