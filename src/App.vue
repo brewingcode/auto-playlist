@@ -2,7 +2,7 @@
 #app
   h1 Auto Playlist
   h2.error(v-if="error") Error: {{error}}
-  div(v-if="authorized")
+  div(v-if="authorized && authorized.id")
     h3 Hello, {{authorized.id}}
     div
       button(@click="signOut") Sign Out
@@ -40,13 +40,15 @@ export default
     history: []
     authorized: null
     error: null
+    timer: null
 
   mounted: ->
     @fromStore()
+    clearTimeout(@timer) if @timer
     @checkAuthParams (resp) =>
       @authorized = resp
       @spotify 'me/playlists', null, (resp) =>
-        setTimeout @poll.bind(this), 0
+        @timer = setTimeout @poll.bind(this), 0
         @playlists = resp.items?.map (item) ->
           value: item.id
           label: item.name
@@ -92,7 +94,7 @@ export default
           @save()
 
         @toStore()
-        setTimeout @poll.bind(this), 5000
+        @timer = setTimeout @poll.bind(this), 5000
 
   components: { vSelect, SpotifyTrack }
   mixins: [ Spotify ]
@@ -109,6 +111,7 @@ export default
 
 .current
   font-size: 130%
+
 .playlists
   width: 30em
   display: inline-block
