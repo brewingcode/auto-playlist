@@ -34,19 +34,16 @@ export default
   data: ->
     playlist: null
     playlists: []
-    tracks: []
+    current: null
+    history: []
     authorized: null
     error: null
-    pollTimer: null
 
   mounted: ->
-    try
-      tracks = JSON.parse(@$localStorage.get 'tracks')
-      if tracks and tracks.length
-        @tracks = tracks
+    @fromStore()
     @checkAuthParams (resp) =>
       @authorized = resp
-      @pollTimer = setTimeout @poll.bind(this), 0
+      setTimeout @poll.bind(this), 0
       @spotify 'me/playlists', null, (resp) =>
         @playlists = resp.items?.map (item) ->
           value: item.id
@@ -56,6 +53,18 @@ export default
     save: (track) ->
       if @authorized?.id and @playlist?.value
         log "saving #{track.item.name} to #{@playlist.label}"
+    toStore: ->
+      for k in ['current', 'playlist', 'history']
+        if this[k]
+          try
+            @$localStorage.set k, JSON.stringify this[k]
+
+    fromStore: ->
+      for k in ['current', 'playlist', 'history']
+        if v = @$localStorage.get k
+          try
+            this[k] = JSON.parse v
+
         @spotify "users/#{@authorized.id}/playlists/#{@playlist.value}/tracks",
           uris: [track.item.uri]
         , (resp) ->
@@ -77,8 +86,8 @@ export default
           if progress > 0.90 and not track.saved
             @save track
 
-        @$localStorage.set 'tracks', JSON.stringify(@tracks)
-        @pollTimer = setTimeout @poll.bind(this), 5000
+        @toStore()
+        setTimeout @poll.bind(this), 5000
 
   components: { vSelect }
   mixins: [ Spotify ]
