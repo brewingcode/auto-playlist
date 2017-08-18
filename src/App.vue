@@ -75,15 +75,16 @@ export default
           @toStore
 
     poll: ->
+
       @spotify 'me/player/currently-playing', null, (resp) =>
         if @current and @current.item.id isnt resp.item.id
-          @history.unshift @current
           @current.is_playing = false
-          resp.saved = false
-          @current = resp
+          @history.unshift @current
+          @current = null
 
         unless @current
           resp.saved = false
+          resp.progress = 0
           @current = resp
 
         @current[k] = resp[k] for k in ['is_playing', 'progress_ms']
