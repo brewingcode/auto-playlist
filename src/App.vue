@@ -7,7 +7,7 @@
     div
       button(@click="signOut") Sign Out
     .playlists
-      h3 Pick one of your playlists
+      h3 Destination playlist
       v-select(v-model="playlist", :options="playlists", :on-change="playlistChange")
     div(v-if="playlist")
       h2 Currently playing:
@@ -20,8 +20,8 @@
         div(v-for="t in history")
           SpotifyTrack(:t="t")
     .usage(v-else).
-      Once you choose a playlist, any track that you listen to more than 90%
-      of will automatically be added to the end of your selected playlist.
+      Any track that you listen to more than 90% of will automatically be
+      added to the end of your selected playlist.
   div(v-else)
     button(@click="auth") Authorize
 </template>
