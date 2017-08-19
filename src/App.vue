@@ -24,6 +24,9 @@
       added to the end of your selected playlist.
   div(v-else)
     button(@click="auth") Authorize
+  div
+    hr
+    a(href="https://github.com/brewingcode/auto-playlist") View on github.com
 </template>
 
 <script lang="coffee">

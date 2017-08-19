@@ -2,6 +2,8 @@
 
 > Automatically add songs you finish playing to a Spotify playlist
 
+https://brewingcode.net/auto-playlist
+
 ## Build Setup
 
 ``` bash
