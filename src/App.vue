@@ -24,9 +24,11 @@
       added to the end of your selected playlist.
   div(v-else)
     button(@click="auth") Authorize
-  div
+
+  footer
     hr
-    a(href="https://github.com/brewingcode/auto-playlist") View on github.com
+    a(href="https://github.com/brewingcode/auto-playlist")
+      .github-logo
 </template>
 
 <script lang="coffee">
@@ -122,4 +124,13 @@ export default
   display: inline-block
 .usage
   margin-top: 20px
+
+footer
+  text-align: center
+  .github-logo
+     display: inline-block
+     background-image: embedurl("github-icon.svg", "utf8")
+     background-size: cover
+     height: (250px / 5)
+     width: (256px / 5)
 </style>
