@@ -98,6 +98,8 @@ export default
 
         @toStore()
         setTimeout @poll.bind(this), 5000
+      , (err) =>
+        setTimeout @poll.bind(this), 5000
 
   components: { vSelect, SpotifyTrack }
   mixins: [ Spotify ]
