@@ -3,10 +3,10 @@
     h1 Auto Playlist: {{ playlist.name }}
     h4(v-if="playlist.description") {{ playlist.description }}
     h3.error(v-if="error") Error: {{error}}
-    table.table.table-striped(v-if="tracks")
+    table.table.table-striped(v-if="tracks.length")
       thead
       tbody
-        tr(v-for="t in tracklist")
+        tr(v-for="t in tracks")
           td {{t.track.name}}
 </template>
 
@@ -18,16 +18,20 @@ export default
   data: ->
     params: null
     playlist: null
-    tracks: null
+    tracks: []
     error: null
   mixins: [ Spotify ]
   mounted: ->
     @params = new URLSearchParams(window.location.search)
     id = @params.get 'id'
     @spotify "playlists/#{id}", null, (resp) => @playlist = resp
-    @spotify "playlists/#{id}/tracks", null, (resp) => @tracks = resp
+    @spotify "playlists/#{id}/tracks", null, @allTracks
   computed:
-    tracklist: -> _.sortBy @tracks.items, 'added_at'
-
+    tracklist: -> _.sortBy @tracks, 'added_at'
+  methods:
+    allTracks: (resp) ->
+      @tracks.push resp.items...
+      if resp.next
+        @spotify resp.next, null, @allTracks
 </script>
 
