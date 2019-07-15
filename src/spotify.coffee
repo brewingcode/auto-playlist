@@ -48,13 +48,14 @@ export default
       window.location.reload()
 
     spotify: (path, postData, cb) ->
+      url = if path.match(/^http/) then path else "https://api.spotify.com/v1/#{path}"
       req = =>
         if postData
-          @$http.post "https://api.spotify.com/v1/#{path}", postData,
+          @$http.post url, postData,
             headers:
               'Authorization': "Bearer #{@$localStorage.get 'access_token'}"
         else
-          @$http.get "https://api.spotify.com/v1/#{path}",
+          @$http.get url,
             headers:
               'Authorization': "Bearer #{@$localStorage.get 'access_token'}"
       req().then (response) ->
