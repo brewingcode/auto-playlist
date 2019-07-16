@@ -77,7 +77,9 @@ export default
       if @current.is_playing and (not @current.saved) and @playlist
         @current.saved = true
         @spotify "users/#{@authorized.id}/playlists/#{@playlist.value}/tracks",
-          uris: [@current.item.uri]
+          method: 'post'
+          data:
+            uris: [@current.item.uri]
         , (resp) =>
           @toStore
 

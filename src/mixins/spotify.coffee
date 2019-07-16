@@ -52,17 +52,17 @@ export default
       @$localStorage.remove 'access_token'
       window.location.reload()
 
-    spotify: (path, postData, cb) ->
+    spotify: (path, opts = {}, cb) ->
       url = if path.match(/^http/) then path else "https://api.spotify.com/v1/#{path}"
+      opts.method = 'get' unless opts.method
       req = =>
-        if postData
-          @$http.post url, postData,
-            headers:
-              'Authorization': "Bearer #{@$localStorage.get 'access_token'}"
-        else
-          @$http.get url,
-            headers:
-              'Authorization': "Bearer #{@$localStorage.get 'access_token'}"
+        @$http
+          method: opts.method
+          url: url
+          data: opts.data
+          headers:
+            'Authorization': "Bearer #{@$localStorage.get 'access_token'}"
+
       req().then (response) ->
         response.json().then cb
       , (err) =>
