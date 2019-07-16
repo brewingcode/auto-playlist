@@ -47,5 +47,10 @@ export default
         @scrollDown @current + 1
       else if e.code in ['KeyK', 'ArrowUp']
         @scrollUp @current - 1
+      else if e.code is 'KeyG' and e.shiftKey is false
+        @scrollUp 0
+      else if e.code is 'KeyG' and e.shiftKey is true
+        @scrollDown @tracks.length - 1
+        document.querySelector('body').scrollIntoView()
 
 </script>
