@@ -65,6 +65,9 @@ export default
     tracklist: -> _.sortBy @tracks, 'added_at'
   methods:
     allTracks: (resp) ->
+      if resp.items.length is 0
+        @error = 'No tracks found in playlist'
+        return
       resp.items.forEach (i) -> i.selected = false
       if @tracks.length is 0
         resp.items[0].selected = true
