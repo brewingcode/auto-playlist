@@ -89,6 +89,9 @@ export default
           t.duplicate = false
 
     onKey: (e) ->
+      if @tracks.length is 0
+        @error = 'No tracks in playlist'
+        return
       if e.key in ['j', 'ArrowDown']
         @scrollDown @selectedIndex + 1
       else if e.key in ['k', 'ArrowUp']
