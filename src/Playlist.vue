@@ -46,13 +46,13 @@ export default
     error: null
     selectedIndex: 0
     controls: [
-      [ 'j/J/down', 'next row/down one row' ]
-      [ 'k/K/up', 'prev row/up one row' ]
-      [ 'l/L/right', 'play track, or fast-forward if track is already playing' ]
-      [ 'h/H/left', 'go back home' ]
+      [ 'j/down', 'next row/down one row' ]
+      [ 'k/up', 'prev row/up one row' ]
+      [ 'l/right', 'play track, or fast-forward if track is already playing' ]
+      [ 'h/left', 'go back home' ]
       [ 'g', 'first row' ]
       [ 'G', 'last row' ]
-      [ 'x/X', 'delete track from playlist' ]
+      [ 'x', 'delete track from playlist' ]
     ]
   mixins: [ Spotify, Scroll ]
   mounted: ->
@@ -89,16 +89,16 @@ export default
           t.duplicate = false
 
     onKey: (e) ->
-      if e.code in ['KeyJ', 'ArrowDown']
+      if e.key in ['j', 'ArrowDown']
         @scrollDown @selectedIndex + 1
-      else if e.code in ['KeyK', 'ArrowUp']
+      else if e.key in ['k', 'ArrowUp']
         @scrollUp @selectedIndex - 1
-      else if e.code is 'KeyG' and e.shiftKey is false
+      else if e.key is 'g'
         @scrollUp 0
         document.querySelector('body').scrollIntoView()
-      else if e.code is 'KeyG' and e.shiftKey is true
+      else if e.key is 'G'
         @scrollDown @tracks.length - 1
-      else if e.code is 'KeyX'
+      else if e.key is 'x'
         dead = @tracks[@selectedIndex].track.uri
         @spotify "playlists/#{@playlist.id}/tracks",
           method: 'delete'
@@ -107,7 +107,7 @@ export default
         , =>
           @tracks.splice _.findIndex(@tracks, (t) -> t.track.uri is dead), 1
           @setCurrent()
-      else if e.code in ['KeyL', 'ArrowRight']
+      else if e.key in ['l', 'ArrowRight']
         @spotify 'me/player', null, (resp) =>
           if @tracks[@selectedIndex].track.id is resp.item?.id
             # currently playing, skip forward 30 seconds
@@ -122,7 +122,7 @@ export default
               method: 'put'
               data:
                 uris: [ @tracks[@selectedIndex].track.uri ]
-      else if e.code in ['KeyH', 'ArrowLeft']
+      else if e.key in ['h', 'ArrowLeft']
         window.location.href = '/'
 
 </script>
