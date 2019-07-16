@@ -44,7 +44,7 @@ export default
     playlist: null
     tracks: []
     error: null
-    current: 0
+    selectedIndex: 0
     controls: [
       [ 'j/J/down', 'next row/down one row' ]
       [ 'k/K/up', 'prev row/up one row' ]
@@ -77,16 +77,16 @@ export default
 
     onKey: (e) ->
       if e.code in ['KeyJ', 'ArrowDown']
-        @scrollDown @current + 1
+        @scrollDown @selectedIndex + 1
       else if e.code in ['KeyK', 'ArrowUp']
-        @scrollUp @current - 1
+        @scrollUp @selectedIndex - 1
       else if e.code is 'KeyG' and e.shiftKey is false
         @scrollUp 0
         document.querySelector('body').scrollIntoView()
       else if e.code is 'KeyG' and e.shiftKey is true
         @scrollDown @tracks.length - 1
       else if e.code is 'KeyX'
-        dead = @tracks[@current].track.uri
+        dead = @tracks[@selectedIndex].track.uri
         @spotify "playlists/#{@playlist.id}/tracks",
           method: 'delete'
           data:
@@ -96,7 +96,7 @@ export default
           @setCurrent()
       else if e.code in ['KeyL', 'ArrowRight']
         @spotify 'me/player', null, (resp) =>
-          if @tracks[@current].track.id is resp.item?.id
+          if @tracks[@selectedIndex].track.id is resp.item?.id
             # currently playing, skip forward 30 seconds
             seekTo = resp.progress_ms + 30000
             @spotify 'me/player/seek',
@@ -108,7 +108,7 @@ export default
             @spotify 'me/player/play',
               method: 'put'
               data:
-                uris: [ @tracks[@current].track.uri ]
+                uris: [ @tracks[@selectedIndex].track.uri ]
       else if e.code in ['KeyH', 'ArrowLeft']
         window.location.href = '/'
 
