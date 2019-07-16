@@ -25,11 +25,14 @@
             th Album
             th Spotify ID
         tbody
-          tr(v-for="t,i in tracks" v-bind:class="{ success: t.selected, dupe: t.duplicate }")
+          tr(v-for="t,i in tracks"
+            v-bind:class="{ success: t.selected, dupe: t.duplicate }"
+            v-on:click="onClick")
             td.text-right(style="padding-right:2ex;") {{i+1}}
             td.text-left {{t.track.name}}
             td.text-left {{t.track.album.name}}
             td(style="font-family:monospace") {{t.track.id}}
+              span#trackIndex(style="display:none") {{i}}
 </template>
 
 <script lang="coffee">
@@ -128,6 +131,13 @@ export default
                 uris: [ @tracks[@selectedIndex].track.uri ]
       else if e.key in ['h', 'ArrowLeft']
         window.location.href = '/'
+
+    onClick: (e) ->
+      el = e.target
+      if el.tagName is 'TD'
+        el = el.parentElement
+      @selectedIndex = +el.querySelector('#trackIndex').innerText
+      @setCurrent()
 
 </script>
 
