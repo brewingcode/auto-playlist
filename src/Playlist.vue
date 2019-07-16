@@ -57,10 +57,12 @@ export default
   mixins: [ Spotify, Scroll ]
   mounted: ->
     @params = new URLSearchParams(window.location.search)
-    window.addEventListener 'keydown', @onKey
     id = @params.get 'id'
     @spotify "playlists/#{id}", null, (resp) => @playlist = resp
     @spotify "playlists/#{id}/tracks", null, @allTracks
+    if not window.playlist_keybind
+      window.playlist_keybind = 1
+      window.addEventListener 'keydown', @onKey
   computed:
     tracklist: -> _.sortBy @tracks, 'added_at'
   methods:
