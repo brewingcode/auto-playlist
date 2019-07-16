@@ -22,6 +22,7 @@
           tr
             th.text-right(style="padding-right:2ex;") #
             th Title
+            th Artist
             th Album
             th Spotify ID
         tbody
@@ -30,6 +31,7 @@
             v-on:click="onClick")
             td.text-right(style="padding-right:2ex;") {{i+1}}
             td.text-left {{t.track.name}}
+            td.text-left {{allArtists(t)}}
             td.text-left {{t.track.album.name}}
             td(style="font-family:monospace") {{t.track.id}}
               span#trackIndex(style="display:none") {{i}}
@@ -90,6 +92,11 @@ export default
         else
           history[key] = 1
           t.duplicate = false
+
+    allArtists: (t) ->
+      t.track.artists.map (a) ->
+        a.name
+      .join ', '
 
     onKey: (e) ->
       if @tracks.length is 0
