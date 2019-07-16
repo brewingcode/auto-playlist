@@ -7,8 +7,8 @@
       table.table.table-striped(v-if="tracks.length")
         thead
         tbody
-          tr(v-for="t in tracks" v-bind:class="t.selected ? 'success' : ''")
-            td {{t.track.name}}
+          tr(v-for="t,i in tracks" v-bind:class="t.selected ? 'success' : ''")
+            td {{i+1}}. {{t.track.name}}
 </template>
 
 <script lang="coffee">
@@ -49,8 +49,8 @@ export default
         @scrollUp @current - 1
       else if e.code is 'KeyG' and e.shiftKey is false
         @scrollUp 0
+        document.querySelector('body').scrollIntoView()
       else if e.code is 'KeyG' and e.shiftKey is true
         @scrollDown @tracks.length - 1
-        document.querySelector('body').scrollIntoView()
 
 </script>
