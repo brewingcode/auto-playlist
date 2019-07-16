@@ -5,8 +5,10 @@
 export default
   methods:
     scrollDown: (index) ->
-      if index <= @current
-        throw new Error "scrollDown called with index (#{index}) l.t.e. than this.current (#{@current})"
+      if index < @current
+        throw new Error "scrollDown called with index (#{index}) l.t. than this.current (#{@current})"
+      else if index == @current
+        return
       # console.log "scrollDown: #{@current} -> #{index}"
       @current = index
       if @current > @tracks.length - 1
@@ -23,8 +25,10 @@ export default
       @setCurrent()
 
     scrollUp: (index) ->
-      if index >= @current
-        throw new Error "scrollUp called with index (#{index}) g.t.e. than this.current (#{@current})"
+      if index > @current
+        throw new Error "scrollUp called with index (#{index}) g.t. than this.current (#{@current})"
+      else if index == @current
+        return
       # console.log "scrollUp: #{@current} -> #{index}"
       @current = index
       if @current < 0
@@ -42,6 +46,8 @@ export default
 
     # tell Vue about the current row
     setCurrent: ->
+      if @current > @tracks.length - 1
+        @current = @tracks.length - 1
       @tracks.forEach (t, i) =>
         if i is @current
           t.selected = true

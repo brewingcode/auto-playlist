@@ -52,5 +52,13 @@ export default
         document.querySelector('body').scrollIntoView()
       else if e.code is 'KeyG' and e.shiftKey is true
         @scrollDown @tracks.length - 1
+      else if e.code is 'KeyX'
+        @spotify "playlists/#{@playlist.id}/tracks",
+          method: 'delete'
+          data:
+            tracks: [ { uri: @tracks[@current].track.uri } ]
+        , =>
+          @tracks.splice @current, 1
+          @setCurrent()
 
 </script>

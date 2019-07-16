@@ -56,12 +56,17 @@ export default
       url = if path.match(/^http/) then path else "https://api.spotify.com/v1/#{path}"
       opts.method = 'get' unless opts.method
       req = =>
-        @$http
-          method: opts.method
-          url: url
-          data: opts.data
-          headers:
-            'Authorization': "Bearer #{@$localStorage.get 'access_token'}"
+        if opts.method is 'delete'
+          @$http.delete url,
+            body: JSON.stringify opts.data
+            headers: 'Authorization': "Bearer #{@$localStorage.get 'access_token'}"
+
+        else
+          @$http
+            method: opts.method
+            url: url
+            data: JSON.stringify(opts.data)
+            headers: 'Authorization': "Bearer #{@$localStorage.get 'access_token'}"
 
       req().then (response) ->
         response.json().then cb
