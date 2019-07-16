@@ -84,7 +84,6 @@ export default
           @toStore
 
     poll: ->
-
       @spotify 'me/player/currently-playing', null, (resp) =>
         if @current and @current.item.id isnt resp.item.id
           @current.is_playing = false

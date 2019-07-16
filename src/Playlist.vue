@@ -25,7 +25,7 @@
             th Album
             th Spotify ID
         tbody
-          tr(v-for="t,i in tracks" v-bind:class="t.selected ? 'success' : ''")
+          tr(v-for="t,i in tracks" v-bind:class="{ success: t.selected, dupe: t.duplicate }")
             td.text-right(style="padding-right:2ex;") {{i+1}}
             td.text-left {{t.track.name}}
             td.text-left {{t.track.album.name}}
@@ -72,8 +72,19 @@ export default
       if @tracks.length is 0
         resp.items[0].selected = true
       @tracks.push resp.items...
+      @markDuplicates()
       if resp.next
         @spotify resp.next, null, @allTracks
+
+    markDuplicates: ->
+      history = {}
+      @tracks.forEach (t) ->
+        key = t.track.name + t.track.artists[0].name
+        if history[key]
+          t.duplicate = true
+        else
+          history[key] = 1
+          t.duplicate = false
 
     onKey: (e) ->
       if e.code in ['KeyJ', 'ArrowDown']
@@ -113,3 +124,8 @@ export default
         window.location.href = '/'
 
 </script>
+
+<style lang="stylus">
+tr.dupe
+  color: red
+</style>
