@@ -9,6 +9,7 @@
     .playlists
       h3 Destination playlist
       v-select(v-model="playlist", :options="playlists", :on-change="playlistChange")
+      a(:href="'/playlist?id=' + this.playlist.value") edit this playlist
     div(v-if="playlist")
       h2 Currently playing:
       div
@@ -32,7 +33,7 @@
 </template>
 
 <script lang="coffee">
-import Spotify from './spotify.coffee'
+import Spotify from './mixins/spotify.coffee'
 import vSelect from 'vue-select'
 import SpotifyTrack from './Track.vue' # "track" is a reserved html5 tag name
 
@@ -76,12 +77,13 @@ export default
       if @current.is_playing and (not @current.saved) and @playlist
         @current.saved = true
         @spotify "users/#{@authorized.id}/playlists/#{@playlist.value}/tracks",
-          uris: [@current.item.uri]
+          method: 'post'
+          data:
+            uris: [@current.item.uri]
         , (resp) =>
           @toStore
 
     poll: ->
-
       @spotify 'me/player/currently-playing', null, (resp) =>
         if @current and @current.item.id isnt resp.item.id
           @current.is_playing = false
