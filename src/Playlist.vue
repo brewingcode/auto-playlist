@@ -17,7 +17,7 @@
     div(v-if="playlist")
       h1 Auto Playlist: {{ playlist.name }}
       h4(v-if="playlist.description") {{ playlist.description }}
-      table.table.table-striped.table-condensed(v-if="tracks.length")
+      table.table.table-striped.table-condensed.tracks(v-if="tracks.length")
         thead
           tr
             th.text-right(style="padding-right:2ex;") #

@@ -17,7 +17,7 @@ export default
         document.querySelector('body').scrollIntoView()
       else
         # check if row is below viewport, and scroll if needed
-        el = document.querySelector("tr:nth-child(#{@selectedIndex + 1})")
+        el = document.querySelector(".tracks tbody tr:nth-child(#{@selectedIndex + 1})")
         h = window.innerHeight or document.documentElement.clientHeight
         if el?.getBoundingClientRect().bottom > h
           el.scrollIntoView(false)
@@ -34,10 +34,10 @@ export default
       if @selectedIndex < 0
         # wrapped around the top, scroll to bottom
         @selectedIndex = @tracks.length - 1
-        document.querySelector('tr:last-child').scrollIntoView()
+        document.querySelector('.tracks tbody tr:last-child').scrollIntoView()
       else
         # check if the row is above viewport, and scroll if needed
-        el = document.querySelector("tr:nth-child(#{@selectedIndex + 1})")
+        el = document.querySelector(".tracks tbody tr:nth-child(#{@selectedIndex + 1})")
         h = window.innerHeight or document.documentElement.clientHeight
         if el?.getBoundingClientRect().top < 0
           el.scrollIntoView()
