@@ -33,7 +33,7 @@
 </template>
 
 <script lang="coffee">
-import Spotify from './spotify.coffee'
+import Spotify from './mixins/spotify.coffee'
 import vSelect from 'vue-select'
 import SpotifyTrack from './Track.vue' # "track" is a reserved html5 tag name
 

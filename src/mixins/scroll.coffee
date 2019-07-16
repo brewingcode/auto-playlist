@@ -1,3 +1,7 @@
+# requires the following properties on the parent component:
+#   - this.current: int, 0-based index of the selected row
+#   - this.tracks: array of track objects
+
 export default
   methods:
     scrollDown: (index) ->

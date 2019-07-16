@@ -12,8 +12,8 @@
 </template>
 
 <script lang="coffee">
-import Spotify from './spotify.coffee'
-import Scroll from './scroll.coffee'
+import Spotify from './mixins/spotify.coffee'
+import Scroll from './mixins/scroll.coffee'
 import _ from 'lodash'
 import Vue from 'vue'
 

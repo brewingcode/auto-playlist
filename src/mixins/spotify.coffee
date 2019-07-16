@@ -1,3 +1,8 @@
+# requires the following properties on the parent component:
+#   - this.error (string)
+#   - this.$localStorage (vue-localstorage library)
+#   - this.$http (Vue built-in)
+
 import crypto from 'crypto'
 import Url from 'url'
 import Querystring from 'querystring'
