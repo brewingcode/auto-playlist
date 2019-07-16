@@ -61,5 +61,20 @@ export default
         , =>
           @tracks.splice _.findIndex(@tracks, (t) -> t.track.uri is dead), 1
           @setCurrent()
+      else if e.code is 'KeyL'
+        @spotify 'me/player', null, (resp) =>
+          if @tracks[@current].track.id is resp.item?.id
+            # currently playing, skip forward 30 seconds
+            seekTo = resp.progress_ms + 30000
+            @spotify 'me/player/seek',
+              method: 'put'
+              params:
+                position_ms: seekTo
+          else
+            # not the currently playing track, start playing it
+            @spotify 'me/player/play',
+              method: 'put'
+              data:
+                uris: [ @tracks[@current].track.uri ]
 
 </script>

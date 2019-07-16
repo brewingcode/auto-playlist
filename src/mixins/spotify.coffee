@@ -44,6 +44,7 @@ export default
           'playlist-read-collaborative'
           'user-read-currently-playing'
           'user-read-playback-state'
+          'streaming'
         ].join ' '
 
       window.location.href = url.format()
@@ -55,21 +56,25 @@ export default
     spotify: (path, opts = {}, cb) ->
       url = if path.match(/^http/) then path else "https://api.spotify.com/v1/#{path}"
       opts.method = 'get' unless opts.method
+      headers =
+        'Authorization': "Bearer #{@$localStorage.get 'access_token'}"
+
       req = =>
         if opts.method is 'delete'
           @$http.delete url,
             body: JSON.stringify opts.data
-            headers: 'Authorization': "Bearer #{@$localStorage.get 'access_token'}"
-
+            headers: headers
+        else if opts.method is 'get'
+          @$http.get url,
+            headers: headers
         else
-          @$http
-            method: opts.method
-            url: url
-            data: JSON.stringify(opts.data)
-            headers: 'Authorization': "Bearer #{@$localStorage.get 'access_token'}"
+          opts.headers = headers
+          @$http[opts.method] url, opts.data,
+            opts
 
       req().then (response) ->
-        response.json().then cb
+        if cb
+          cb response.body
       , (err) =>
         if err.status is 401 and @$localStorage.get 'access_token'
           # our auth probably expired
