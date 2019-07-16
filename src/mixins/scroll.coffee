@@ -7,8 +7,6 @@ export default
     scrollDown: (index) ->
       if index < @selectedIndex
         throw new Error "scrollDown called with index (#{index}) l.t. than this.selectedIndex (#{@selectedIndex})"
-      else if index == @selectedIndex
-        return
       # console.log "scrollDown: #{@selectedIndex} -> #{index}"
       @selectedIndex = index
       if @selectedIndex > @tracks.length - 1
@@ -27,8 +25,6 @@ export default
     scrollUp: (index) ->
       if index > @selectedIndex
         throw new Error "scrollUp called with index (#{index}) g.t. than this.selectedIndex (#{@selectedIndex})"
-      else if index == @selectedIndex
-        return
       # console.log "scrollUp: #{@selectedIndex} -> #{index}"
       @selectedIndex = index
       if @selectedIndex < 0

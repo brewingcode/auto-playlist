@@ -102,14 +102,15 @@ export default
       else if e.key is 'G'
         @scrollDown @tracks.length - 1
       else if e.key is 'x'
-        dead = @tracks[@selectedIndex].track.uri
+        dead = @selectedIndex
+        # console.log 'deleting:', @selectedIndex, @tracks[@selectedIndex].track.name
         @spotify "playlists/#{@playlist.id}/tracks",
           method: 'delete'
           data:
-            tracks: [ { uri: dead } ]
+            tracks: [ { uri: @tracks[dead].track.uri } ]
         , =>
-          @tracks.splice _.findIndex(@tracks, (t) -> t.track.uri is dead), 1
-          @setCurrent()
+          @tracks.splice dead, 1
+          @setCurrent dead - 1
       else if e.key in ['l', 'ArrowRight']
         @spotify 'me/player', null, (resp) =>
           if @tracks[@selectedIndex].track.id is resp.item?.id
