@@ -53,12 +53,13 @@ export default
       else if e.code is 'KeyG' and e.shiftKey is true
         @scrollDown @tracks.length - 1
       else if e.code is 'KeyX'
+        dead = @tracks[@current].track.uri
         @spotify "playlists/#{@playlist.id}/tracks",
           method: 'delete'
           data:
-            tracks: [ { uri: @tracks[@current].track.uri } ]
+            tracks: [ { uri: dead } ]
         , =>
-          @tracks.splice @current, 1
+          @tracks.splice _.findIndex(@tracks, (t) -> t.track.uri is dead), 1
           @setCurrent()
 
 </script>
