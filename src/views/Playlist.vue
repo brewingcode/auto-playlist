@@ -131,10 +131,15 @@ export default
                 position_ms: seekTo
           else
             # not the currently playing track, start playing it
+            selectedUri = @tracks[@selectedIndex].track.uri
+            offset = _.findIndex @tracks, (t) -> t.track.uri is selectedUri
             @spotify 'me/player/play',
               method: 'put'
               data:
-                uris: [ @tracks[@selectedIndex].track.uri ]
+                context_uri: @playlist.uri
+                offset:
+                  position: offset
+
       else if e.key in ['h', 'ArrowLeft']
         @$router.push '/'
 
