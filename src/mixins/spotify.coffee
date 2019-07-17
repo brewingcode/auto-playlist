@@ -10,12 +10,12 @@ import Querystring from 'querystring'
 export default
   methods:
     self: ->
-      window.location.protocol + '//' + window.location.host + window.location.pathname
+      window.location.protocol + '//' + window.location.host + window.location.pathname + '#/'
 
     checkAuthParams: (cb) ->
       me = Url.parse window.location.href, true
-      if me.hash
-        params = Querystring.parse me.hash.replace /^#/, ''
+      if me.hash?.match /#\/access_token=/
+        params = Querystring.parse me.hash.replace /^#\//, ''
         if params.state is @$localStorage.get('csrf')
           @$localStorage.set 'access_token', params.access_token
         @$localStorage.remove('csrf')

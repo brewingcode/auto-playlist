@@ -20,6 +20,11 @@ export default new Router({
       component: function () {
         return import(/* webpackChunkName: "about" */ './views/About.vue')
       }
-    }
+    },
+    {
+      path: '/access_token*',
+      name: 'home',
+      component: Home
+    },
   ]
 })
