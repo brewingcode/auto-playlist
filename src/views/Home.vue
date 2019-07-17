@@ -8,7 +8,7 @@ div
     .playlists
       h3 Destination playlist
       v-select(v-model="playlist", :options="playlists", @input="playlistChange")
-      router-link(v-if="playlist" :to="{ name: 'playlist', params: { id: this.playlist.value } }") edit this playlist
+      router-link(v-if="playlist" :to="{ name: 'playlist', query: { id: this.playlist.value } }") edit this playlist
     div(v-if="playlist")
       h2 Currently playing:
       div

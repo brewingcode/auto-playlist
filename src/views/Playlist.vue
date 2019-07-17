@@ -44,7 +44,6 @@ import _ from 'lodash'
 import Vue from 'vue'
 
 export default
-  props: [ 'id' ]
   data: ->
     params: null
     playlist: null
@@ -62,8 +61,8 @@ export default
     ]
   mixins: [ Spotify, Scroll ]
   mounted: ->
-    @spotify "playlists/#{@id}", null, (resp) => @playlist = resp
-    @spotify "playlists/#{@id}/tracks", null, @allTracks
+    @spotify "playlists/#{@$route.query.id}", null, (resp) => @playlist = resp
+    @spotify "playlists/#{@$route.query.id}/tracks", null, @allTracks
     window.addEventListener 'keydown', @onKey
   beforeDestroy: ->
     window.removeEventListener 'keydown', @onKey
