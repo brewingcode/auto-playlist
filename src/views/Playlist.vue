@@ -24,17 +24,17 @@
             th Title
             th Artist
             th Album
-            th Spotify ID
+            th Added
         tbody
           tr(v-for="t,i in tracks"
             v-bind:class="{ active: t.selected, dupe: t.duplicate }"
             v-on:click="onClick")
             td.text-right(style="padding-right:2ex;") {{i+1}}
+              span#trackIndex(style="display:none") {{i}}
             td.text-left {{t.track.name}}
             td.text-left {{allArtists(t)}}
             td.text-left {{t.track.album.name}}
-            td(style="font-family:monospace") {{t.track.id}}
-              span#trackIndex(style="display:none") {{i}}
+            td.text-right {{humanize(t)}}
 </template>
 
 <script lang="coffee">
@@ -42,6 +42,7 @@ import Spotify from '../mixins/spotify.coffee'
 import Scroll from '../mixins/scroll.coffee'
 import _ from 'lodash'
 import Vue from 'vue'
+import { distanceInWordsToNow } from 'date-fns'
 
 export default
   data: ->
@@ -148,6 +149,9 @@ export default
         el = el.parentElement
       @selectedIndex = +el.querySelector('#trackIndex').innerText
       @setCurrent()
+
+    humanize: (track) ->
+      distanceInWordsToNow track.added_at, { addSuffix: true, includeSeconds: true }
 
 </script>
 
