@@ -48,16 +48,22 @@ export default
     history: []
     authorized: null
     error: null
+    polling: null
 
   mounted: ->
     @fromStore()
     @checkAuthParams (resp) =>
       @authorized = resp
       @spotify 'me/playlists', null, (resp) =>
-        setTimeout @poll.bind(this), 0
+        @polling = setInterval @poll, 5000
         @playlists = resp.items?.map (item) ->
           value: item.id
           label: item.name
+
+  beforeDestroy: ->
+    if @polling
+      clearInterval @polling
+      @polling = null
 
   methods:
     toStore: ->
@@ -106,9 +112,8 @@ export default
           @save()
 
         @toStore()
-        setTimeout @poll.bind(this), 5000
       , (err) =>
-        setTimeout @poll.bind(this), 5000
+        @error = 'Unable to get currently playing track'
 </script>
 
 <style lang="stylus">
