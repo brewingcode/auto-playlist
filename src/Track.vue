@@ -14,6 +14,7 @@
     a.album(target="_blank", :href="t.item.album.external_urls.spotify") {{t.item.album.name}}
   div(v-if="t.is_playing")
     progress(:value="t.progress")
+    span &nbsp;{{ Math.round(t.progress*100, 0) }}%
 </template>
 
 <script lang="coffee">
@@ -26,4 +27,6 @@ export default
   display: inline-block
   padding: 0 1em
   margin-bottom: 5px
+span.progress
+  font-size: smaller
 </style>
