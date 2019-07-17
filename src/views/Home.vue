@@ -8,7 +8,7 @@ div
     .playlists
       h3 Destination playlist
       v-select(v-model="playlist", :options="playlists", :on-change="playlistChange")
-      a(:href="'/playlist?id=' + this.playlist.value") edit this playlist
+      a(v-if="playlist" :href="'/playlist?id=' + this.playlist.value") edit this playlist
     div(v-if="playlist")
       h2 Currently playing:
       div
