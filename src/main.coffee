@@ -12,6 +12,7 @@ Vue.use BootstrapVue
 
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import 'bootstrap/dist/css/bootstrap.css'
+import 'vue-select/dist/vue-select.css'
 
 Vue.config.productionTip = false
 
