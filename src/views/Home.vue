@@ -128,6 +128,8 @@ export default
   display: inline-block
 .usage
   margin-top: 20px
+.track-saved
+  background-color: #abefba
 
 footer
   text-align: center

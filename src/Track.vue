@@ -1,5 +1,5 @@
 <template lang="pug">
-.track(:class="{'bg-success': t.saved}")
+.track(:class="{'track-saved': t.saved}")
   div
     a.title(target="_blank", :href="t.item.external_urls.spotify") {{t.item.name}}
     span
