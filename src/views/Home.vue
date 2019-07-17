@@ -54,6 +54,7 @@ export default
     @fromStore()
     @checkAuthParams (resp) =>
       @authorized = resp
+      @poll()
       @spotify 'me/playlists', null, (resp) =>
         @polling = setInterval @poll, 5000
         @playlists = resp.items?.map (item) ->
