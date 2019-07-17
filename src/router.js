@@ -26,5 +26,13 @@ export default new Router({
       name: 'home',
       component: Home
     },
+    {
+      path: '/playlist',
+      name: 'playlist',
+      component: function () {
+        return import(/* webpackChunkName: "playlist" */ './views/Playlist.vue')
+      },
+      props: true,
+    },
   ]
 })
