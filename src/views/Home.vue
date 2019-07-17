@@ -88,6 +88,8 @@ export default
 
     poll: ->
       @spotify 'me/player/currently-playing', null, (resp) =>
+        return unless resp
+
         if @current and @current.item.id isnt resp.item.id
           @current.is_playing = false
           @history.unshift @current
