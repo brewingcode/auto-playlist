@@ -7,13 +7,18 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "babel-loader": "^8.0.6",
     "vue": "^2.6.10",
     "vue-router": "^3.0.3"
   },
   "devDependencies": {
     "@vue/cli-service": "^3.9.0",
+    "coffee-loader": "^0.9.0",
+    "coffeescript": "^2.3.2",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
+    "vue-cli-plugin-coffeescript": "^0.0.3",
+    "vue-cli-plugin-pug": "^1.0.7",
     "vue-template-compiler": "^2.6.10"
   }
 }
