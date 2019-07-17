@@ -19,7 +19,7 @@ export default
         if params.state is @$localStorage.get('csrf')
           @$localStorage.set 'access_token', params.access_token
         @$localStorage.remove('csrf')
-        window.location.href = @self()
+        @$router.push '/'
       else if me.query
         if me.query.state is @$localStorage.get('csrf')
           @error = "Spotify authorization error: #{me.query.error}"
@@ -51,7 +51,8 @@ export default
 
     signOut: ->
       @$localStorage.remove 'access_token'
-      window.location.reload()
+      @authorized = null
+      @$router.push '/'
 
     spotify: (path, opts, cb) ->
       url = if path.match(/^http/) then path else "https://api.spotify.com/v1/#{path}"
