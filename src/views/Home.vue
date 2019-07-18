@@ -60,6 +60,10 @@ export default
         @playlists = resp.items?.map (item) ->
           value: item.id
           label: item.name
+    window.addEventListener 'keydown', @onKey
+
+  beforeDestroy: ->
+    window.removeEventListener 'keydown', @onKey
 
   beforeDestroy: ->
     if @polling
@@ -115,6 +119,13 @@ export default
         @toStore()
       , (err) =>
         @error = 'Unable to get currently playing track'
+
+    onKey: (e) ->
+      if e.key in ['l', 'ArrowRight']
+        @$router.push
+          name: 'playlist'
+          query: id: @playlist.value
+
 </script>
 
 <style lang="stylus">
