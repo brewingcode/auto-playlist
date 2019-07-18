@@ -34,7 +34,7 @@
             td.text-left {{t.track.name}}
             td.text-left {{allArtists(t)}}
             td.text-left {{t.track.album.name}}
-            td.text-right {{humanize(t)}}
+            td.text-right(style="white-space:nowrap") {{humanize(t)}}
 </template>
 
 <script lang="coffee">
