@@ -40,8 +40,8 @@
 <script lang="coffee">
 import Spotify from '../mixins/spotify.coffee'
 import Scroll from '../mixins/scroll.coffee'
-import _ from 'lodash'
 import ignoreKey from '../ignore-key.coffee'
+import { sortBy, findIndex } from 'lodash'
 import Vue from 'vue'
 import { distanceInWordsToNow } from 'date-fns'
 
@@ -69,7 +69,7 @@ export default
   beforeDestroy: ->
     window.removeEventListener 'keydown', @onKey
   computed:
-    tracklist: -> _.sortBy @tracks, 'added_at'
+    tracklist: -> sortBy @tracks, 'added_at'
   methods:
     allTracks: (resp) ->
       if resp.items.length is 0
@@ -135,7 +135,7 @@ export default
           else
             # not the currently playing track, start playing it
             selectedUri = @tracks[@selectedIndex].track.uri
-            offset = _.findIndex @tracks, (t) -> t.track.uri is selectedUri
+            offset = findIndex @tracks, (t) -> t.track.uri is selectedUri
             @spotify 'me/player/play',
               method: 'put'
               data:
