@@ -31,6 +31,7 @@ div
 import Spotify from '../mixins/spotify.coffee'
 import vSelect from 'vue-select'
 import SpotifyTrack from '../Track.vue' # "track" is a reserved html5 tag name
+import ignoreKey from '../ignore-key.coffee'
 
 export default
   components: { vSelect, SpotifyTrack }
@@ -117,6 +118,7 @@ export default
         @error = 'Unable to get currently playing track'
 
     onKey: (e) ->
+      return if ignoreKey(e)
       if e.key in ['l', 'ArrowRight']
         @$router.push
           name: 'playlist'

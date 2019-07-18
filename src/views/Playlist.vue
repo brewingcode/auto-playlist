@@ -41,6 +41,7 @@
 import Spotify from '../mixins/spotify.coffee'
 import Scroll from '../mixins/scroll.coffee'
 import _ from 'lodash'
+import ignoreKey from '../ignore-key.coffee'
 import Vue from 'vue'
 import { distanceInWordsToNow } from 'date-fns'
 
@@ -101,6 +102,8 @@ export default
       if @tracks.length is 0
         @error = 'No tracks in playlist'
         return
+      return if ignoreKey(e)
+
       if e.key in ['j', 'ArrowDown']
         @scrollDown @selectedIndex + 1
       else if e.key in ['k', 'ArrowUp']
