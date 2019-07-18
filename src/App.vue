@@ -1,6 +1,10 @@
 <template lang="pug">
 #app
   router-view
+  footer
+    hr
+    a(href="https://github.com/brewingcode/auto-playlist")
+      img(alt="GitHub logo" width="50" height="50" src="./assets/github.svg")
 </template>
 
 <style lang="stylus">

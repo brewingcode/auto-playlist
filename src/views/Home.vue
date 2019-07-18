@@ -25,10 +25,6 @@ div
   div(v-else)
     button(@click="auth") Authorize
 
-  footer
-    hr
-    a(href="https://github.com/brewingcode/auto-playlist")
-      .github-logo
 </template>
 
 <script lang="coffee">
@@ -147,13 +143,4 @@ export default
   margin-top: 20px
 .track-saved
   background-color: #abefba
-
-footer
-  text-align: center
-  .github-logo
-     display: inline-block
-     background-image: embedurl("../github-icon.svg", "utf8")
-     background-size: cover
-     height: (250px / 5)
-     width: (256px / 5)
 </style>
