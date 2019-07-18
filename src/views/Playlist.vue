@@ -42,7 +42,6 @@ import Spotify from '../mixins/spotify.coffee'
 import Scroll from '../mixins/scroll.coffee'
 import ignoreKey from '../ignore-key.coffee'
 import { sortBy, findIndex } from 'lodash'
-import Vue from 'vue'
 import { distanceInWordsToNow } from 'date-fns'
 
 export default
