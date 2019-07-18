@@ -4,8 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "test-build": "vue-cli-service build && cd dist && python3 -m http.server 8080"
+    "build": "vue-cli-service build"
   },
   "devDependencies": {
     "@vue/cli-service": "^3.9.0",
