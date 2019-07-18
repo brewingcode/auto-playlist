@@ -14,6 +14,7 @@ div
       div
         div(v-if="current && current.is_playing")
           SpotifyTrack.current(:t="current")
+          div: button(@click="save") Save right now
         div(v-else) (nothing)
       div(v-if="history.length")
         h3 Previously played:
@@ -127,6 +128,8 @@ export default
 </script>
 
 <style lang="stylus">
+h2, h3, h4
+  padding-top: 10px
 .current
   font-size: 130%
 .playlists
