@@ -16,7 +16,7 @@
     h3.error(v-if="error") Error: {{error}}
     div(v-if="playlist")
       h1 Auto Playlist: {{ playlist.name }}
-      h4(v-if="playlist.description") {{ playlist.description }}
+      h4(v-if="playlist.description" v-html="playlist.description")
       table.table.table-striped.table-sm.tracks(v-if="tracks.length")
         thead
           tr
