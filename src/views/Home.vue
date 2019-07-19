@@ -62,8 +62,6 @@ export default
 
   beforeDestroy: ->
     window.removeEventListener 'keydown', @onKey
-
-  beforeDestroy: ->
     if @polling
       clearInterval @polling
       @polling = null
