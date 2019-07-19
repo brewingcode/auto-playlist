@@ -134,17 +134,12 @@ export default
           else
             # not the currently playing track, start playing it
             selectedUri = @tracks[@selectedIndex].track.uri
-            offset = 0
-            for t in @tracks
-              break if t.track.uri is selectedUri
-              offset++ if t.track.is_playable
-
             @spotify 'me/player/play',
               method: 'put'
               data:
                 context_uri: @playlist.uri
                 offset:
-                  position: offset
+                  uri: selectedUri
 
       else if e.key in ['h', 'ArrowLeft']
         @$router.push '/'
