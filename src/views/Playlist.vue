@@ -1,40 +1,40 @@
 <template lang="pug">
+div
   div
-    div
-      router-link(to="/") back to home
-      h3 Controls (ala vim)
-      table.table-striped.controls
-        thead
-          tr
-            th Key(s)
-            th.text-center Action
-        tbody
-          tr(v-for="c in controls")
-            td(style="font-family:monospace; padding-right:3ex;") {{c[0]}}
-            td.text-center {{c[1]}}
+    router-link(to="/") back to home
+    h3 Controls (ala vim)
+    table.table-striped.controls
+      thead
+        tr
+          th Key(s)
+          th.text-center Action
+      tbody
+        tr(v-for="c in controls")
+          td(style="font-family:monospace; padding-right:3ex;") {{c[0]}}
+          td.text-center {{c[1]}}
 
-    h3.error(v-if="error") Error: {{error}}
-    div(v-if="playlist")
-      h1 Auto Playlist: {{ playlist.name }}
-      h4(v-if="playlist.description" v-html="playlist.description")
-      table.table.table-striped.table-sm.tracks(v-if="tracks.length")
-        thead
-          tr
-            th.text-right(style="padding-right:2ex;") #
-            th Title
-            th Artist
-            th Album
-            th Added
-        tbody
-          tr(v-for="t,i in tracks"
-            v-bind:class="{ active: t.selected, dupe: t.duplicate }"
-            v-on:click="onClick")
-            td.text-right(style="padding-right:2ex;") {{i+1}}
-              span#trackIndex(style="display:none") {{i}}
-            td.text-left {{t.track.name}}
-            td.text-left {{allArtists(t)}}
-            td.text-left {{t.track.album.name}}
-            td.text-right(style="white-space:nowrap") {{humanize(t)}}
+  h3.error(v-if="error") Error: {{error}}
+  div(v-if="playlist")
+    h1 Auto Playlist: {{ playlist.name }}
+    h4(v-if="playlist.description" v-html="playlist.description")
+    table.table.table-striped.table-sm.tracks(v-if="tracks.length")
+      thead
+        tr
+          th.text-right(style="padding-right:2ex;") #
+          th Title
+          th Artist
+          th Album
+          th Added
+      tbody
+        tr(v-for="t,i in tracks"
+          v-bind:class="{ active: t.selected, dupe: t.duplicate }"
+          v-on:click="onClick")
+          td.text-right(style="padding-right:2ex;") {{i+1}}
+            span#trackIndex(style="display:none") {{i}}
+          td.text-left {{t.track.name}}
+          td.text-left {{allArtists(t)}}
+          td.text-left {{t.track.album.name}}
+          td.text-right(style="white-space:nowrap") {{humanize(t)}}
 </template>
 
 <script lang="coffee">
