@@ -63,7 +63,7 @@ export default
   mixins: [ Spotify, Scroll ]
   mounted: ->
     @spotify "playlists/#{@$route.query.id}", null, (resp) => @playlist = resp
-    @spotify "playlists/#{@$route.query.id}/tracks?market=from_token", null, @allTracks
+    @spotify "playlists/#{@$route.query.id}/tracks", null, @allTracks
     window.addEventListener 'keydown', @onKey
   beforeDestroy: ->
     window.removeEventListener 'keydown', @onKey
