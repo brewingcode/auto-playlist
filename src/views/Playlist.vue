@@ -36,6 +36,8 @@ div
           td.text-right(style="white-space:nowrap") {{humanize(t)}}
   b-modal(ref="cannot-play-modal" hide-footer title="Spotify Error")
     .text-center Sorry, can't play that track, it is unavailable.
+  b-modal(ref="api-error-modal" hide-footer title="Spotify API Error")
+    .text-center {{ error }}
 </template>
 
 <script lang="coffee">
@@ -64,6 +66,9 @@ export default
     ]
 
   mixins: [ Spotify, Scroll ]
+
+  watch:
+    error: -> @$refs['api-error-modal'].show()
 
   mounted: ->
     @spotify "playlists/#{@$route.query.id}", null, (resp) => @playlist = resp

@@ -75,6 +75,7 @@ export default
           @$http[opts.method] url, opts.data,
             opts
 
+      @error = null
       req().then (response) ->
         if cb
           cb response.body

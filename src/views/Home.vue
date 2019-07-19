@@ -1,6 +1,6 @@
 <template lang="pug">
 div
-  h3.error(v-if="error") Error: {{error}}
+  h3.bg-danger(v-if="error") Error: {{error}}
   div(v-if="authorized")
     h4 Hello, {{authorized.id}}
     div
@@ -85,12 +85,12 @@ export default
 
     save: ->
       if @current.is_playing and (not @current.saved) and @playlist
-        @current.saved = true
         @spotify "users/#{@authorized.id}/playlists/#{@playlist.value}/tracks",
           method: 'post'
           data:
             uris: [@current.item.uri]
         , (resp) =>
+          @current.saved = true
           @toStore
 
     poll: ->
