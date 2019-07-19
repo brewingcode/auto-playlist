@@ -13,7 +13,6 @@ div
           td(style="font-family:monospace; padding-right:3ex;") {{c[0]}}
           td.text-center {{c[1]}}
 
-  h3.error(v-if="error") Error: {{error}}
   div(v-if="playlist")
     h1 Auto Playlist: {{ playlist.name }}
     h4(v-if="playlist.description" v-html="playlist.description")
@@ -35,6 +34,8 @@ div
           td.text-left {{allArtists(t)}}
           td.text-left {{t.track.album.name}}
           td.text-right(style="white-space:nowrap") {{humanize(t)}}
+  b-modal(ref="cannot-play-modal" hide-footer title="Spotify Error")
+    .text-center Sorry, can't play that track, it is unavailable.
 </template>
 
 <script lang="coffee">
@@ -45,6 +46,7 @@ import { sortBy, findIndex } from 'lodash'
 import { distanceInWordsToNow } from 'date-fns'
 
 export default
+
   data: ->
     params: null
     playlist: null
@@ -60,15 +62,20 @@ export default
       [ 'G', 'last row' ]
       [ 'x', 'delete track from playlist' ]
     ]
+
   mixins: [ Spotify, Scroll ]
+
   mounted: ->
     @spotify "playlists/#{@$route.query.id}", null, (resp) => @playlist = resp
     @spotify "playlists/#{@$route.query.id}/tracks", null, @allTracks
     window.addEventListener 'keydown', @onKey
+
   beforeDestroy: ->
     window.removeEventListener 'keydown', @onKey
+
   computed:
     tracklist: -> sortBy @tracks, 'added_at'
+
   methods:
     allTracks: (resp) ->
       if resp.items.length is 0
@@ -133,13 +140,16 @@ export default
                 position_ms: seekTo
           else
             # not the currently playing track, start playing it
-            selectedUri = @tracks[@selectedIndex].track.uri
-            @spotify 'me/player/play',
-              method: 'put'
-              data:
-                context_uri: @playlist.uri
-                offset:
-                  uri: selectedUri
+            @spotify "tracks/#{@tracks[@selectedIndex].track.id}?market=from_token", null, (resp) =>
+              if resp.is_playable
+                @spotify 'me/player/play',
+                  method: 'put'
+                  data:
+                    context_uri: @playlist.uri
+                    offset:
+                      uri: @tracks[@selectedIndex].track.uri
+              else
+                @$refs['cannot-play-modal'].show()
 
       else if e.key in ['h', 'ArrowLeft']
         @$router.push '/'
