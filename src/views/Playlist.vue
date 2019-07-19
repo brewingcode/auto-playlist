@@ -63,7 +63,7 @@ export default
   mixins: [ Spotify, Scroll ]
   mounted: ->
     @spotify "playlists/#{@$route.query.id}", null, (resp) => @playlist = resp
-    @spotify "playlists/#{@$route.query.id}/tracks", null, @allTracks
+    @spotify "playlists/#{@$route.query.id}/tracks?market=from_token", null, @allTracks
     window.addEventListener 'keydown', @onKey
   beforeDestroy: ->
     window.removeEventListener 'keydown', @onKey
@@ -134,7 +134,11 @@ export default
           else
             # not the currently playing track, start playing it
             selectedUri = @tracks[@selectedIndex].track.uri
-            offset = findIndex @tracks, (t) -> t.track.uri is selectedUri
+            offset = 0
+            for t in @tracks
+              break if t.track.uri is selectedUri
+              offset++ if t.track.is_playable
+
             @spotify 'me/player/play',
               method: 'put'
               data:
