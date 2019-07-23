@@ -165,6 +165,8 @@ export default
       el = e.target
       if el.tagName is 'TD'
         el = el.parentElement
+      else if el.tagName is 'A'
+        return
       @selectedIndex = +el.querySelector('#trackIndex').innerText
       @setCurrent()
 
