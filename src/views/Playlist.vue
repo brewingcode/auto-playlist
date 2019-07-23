@@ -14,7 +14,9 @@ div
           td.text-center {{c[1]}}
 
   div(v-if="playlist")
-    h1 Auto Playlist: {{ playlist.name }}
+    h1
+      span Auto Playlist:&nbsp;
+      a(:href="playlist.external_urls.spotify" v-html="playlist.name")
     h4(v-if="playlist.description" v-html="playlist.description")
     table.table.table-striped.table-sm.tracks(v-if="tracks.length")
       thead
@@ -30,9 +32,14 @@ div
           v-on:click="onClick")
           td.text-right(style="padding-right:2ex;") {{i+1}}
             span#trackIndex(style="display:none") {{i}}
-          td.text-left {{t.track.name}}
-          td.text-left {{allArtists(t)}}
-          td.text-left {{t.track.album.name}}
+          td.text-left
+            a(:href="t.track.external_urls.spotify" target="_blank") {{t.track.name}}
+          td.text-left
+            span(v-for="a, i in t.track.artists")
+              a(:href="a.external_urls.spotify" target="_blank") {{a.name}}
+              span(v-if="i + 1 < t.track.artists.length") ,&nbsp;
+          td.text-left
+            a(:href="t.track.album.external_urls.spotify" target="_blank") {{t.track.album.name}}
           td.text-right(style="white-space:nowrap") {{humanize(t)}}
   b-modal(ref="cannot-play-modal" hide-footer title="Spotify Error")
     .text-center Sorry, can't play that track, it is unavailable.
@@ -103,11 +110,6 @@ export default
         else
           history[key] = 1
           t.duplicate = false
-
-    allArtists: (t) ->
-      t.track.artists.map (a) ->
-        a.name
-      .join ', '
 
     onKey: (e) ->
       if @tracks.length is 0
