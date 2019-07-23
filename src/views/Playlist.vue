@@ -176,7 +176,7 @@ export default
 </script>
 
 <style lang="stylus">
-tr.dupe
+tr.dupe, tr.dupe > td a
   color: red
 tr.active
   background-color: #abefba !important
