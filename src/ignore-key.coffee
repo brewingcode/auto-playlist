@@ -1,5 +1,5 @@
 export default (e) ->
-  if e.metaKey or e.altKey or e.ctrlKey
-    true
-  else
-    false
+  return true if e.metaKey or e.altKey or e.ctrlKey
+  return true if e.target?.tagName is 'INPUT'
+
+  return false
