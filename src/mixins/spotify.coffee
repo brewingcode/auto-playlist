@@ -90,5 +90,7 @@ export default
           # only log error if status is NOT 0, because 0 indicates some weird
           # not-quite-errork
           console.error 'api error:', JSON.stringify(err)
-          msg = err.status + if err.statusText then " (#{err.statusText})" else ''
-          @error = "Spotify API: #{msg}"
+          if msg = (err.body?.error?.message or err.statusText)
+            @error = "#{err.status}: #{msg}"
+          else
+            @error = err.status
