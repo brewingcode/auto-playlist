@@ -7,7 +7,7 @@ div
       button(@click="signOut") Sign Out
     .playlists
       h3 Destination playlist
-      v-select(v-model="playlist", :options="playlists", @input="playlistChange")
+      v-select(v-model="playlist" :options="playlists" @input="playlistChange" inputId="playlist")
       router-link(v-if="playlist" :to="{ name: 'playlist', query: { id: this.playlist.value } }") edit this playlist
     div(v-if="playlist")
       h2 Currently playing:
@@ -122,6 +122,9 @@ export default
         @$router.push
           name: 'playlist'
           query: id: @playlist.value
+      else if e.key is '/'
+        document.querySelector('#playlist').focus()
+        e.preventDefault()
 
 </script>
 
