@@ -33,6 +33,7 @@ import Spotify from '../mixins/spotify.coffee'
 import vSelect from 'vue-select'
 import SpotifyTrack from '../Track.vue' # "track" is a reserved html5 tag name
 import ignoreKey from '../ignore-key.coffee'
+import { format } from 'date-fns'
 
 export default
   components: { vSelect, SpotifyTrack }
@@ -90,7 +91,7 @@ export default
           data:
             uris: [@current.item.uri]
         , (resp) =>
-          @current.saved = true
+          @current.saved = format new Date()
           @toStore
 
     poll: ->
@@ -103,7 +104,7 @@ export default
           @current = null
 
         unless @current
-          resp.saved = false
+          resp.saved = null
           resp.progress = 0
           @current = resp
 
